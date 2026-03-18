@@ -1,0 +1,9 @@
+.git/
+.venv/
+__pycache__/
+*.pyc
+notebook/
+tests/
+docs/build/
+travis/
+.vscode/

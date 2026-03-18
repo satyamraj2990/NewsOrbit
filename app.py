@@ -13,12 +13,12 @@ import sys
 import os
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
-app.secret_key = 'newsOrbit_intel_2024_xKp9'
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'change-me-in-production')
 CORS(app)
 
 # --- Auth helpers ---
-DASHBOARD_USER = 'admin'
-DASHBOARD_PASS = 'newsOrbit2024'
+DASHBOARD_USER = os.getenv('DASHBOARD_USER', 'admin')
+DASHBOARD_PASS = os.getenv('DASHBOARD_PASS', 'newsOrbit2024')
 
 def login_required(f):
     @wraps(f)
