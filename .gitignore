@@ -1,0 +1,18 @@
+.cache/
+.coverage
+*.pyc
+tests/__pycache__/*
+/notebook/
+/travis/
+/.travis.yml
+
+# Local environments and secret files
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx

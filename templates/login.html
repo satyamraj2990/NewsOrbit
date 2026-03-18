@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsOrbit — Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary:     #060C18;
+            --bg-secondary:   #080E1C;
+            --bg-card:        #0C1628;
+            --bg-elevated:    #102038;
+
+            /* Evergreen */
+            --accent-green:   #2ABF82;
+            --accent-light:   #3ED19A;
+            --accent-muted:   #1E8F60;
+
+            /* Battalic Blue secondary */
+            --battalion:      #3A8AE8;
+            --battalion-light: #5BA3F5;
+
+            --glow-green:     0 0 26px rgba(42,191,130,0.52);
+            --glow-green-lg:  0 0 48px rgba(42,191,130,0.68);
+            --text-cream:     #E4EEF6;
+            --text-warm:      #B0CCDE;
+            --text-muted:     #6E90AA;
+            --text-dim:       #3A5A72;
+            --text-black:     #060C18;
+            --border-green:   rgba(42,191,130,0.24);
+            --border-subtle:  rgba(42,191,130,0.11);
+            --shadow-lg:      0 22px 48px rgba(0,0,0,0.76);
+            --shadow-xl:      0 32px 64px rgba(0,0,0,0.86);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background:
+                radial-gradient(ellipse at 20% 15%, rgba(42,191,130,0.07) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 85%, rgba(58,138,232,0.09) 0%, transparent 50%),
+                linear-gradient(160deg, #060C18 0%, #080E1C 45%, #0C1628 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Ambient Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -25%;
+            left: -15%;
+            width: 750px;
+            height: 750px;
+            background: radial-gradient(circle, rgba(42,191,130,0.07) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -20%;
+            right: -15%;
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(58,138,232,0.09) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Grid pattern overlay */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(42,191,130,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(42,191,130,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Login wrapper */
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 460px;
+            padding: 24px;
+        }
+
+        /* Brand header above card */
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .brand-title {
+            font-size: 2.4em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
+
+        .brand-sub {
+            color: var(--text-muted);
+            font-size: 0.95em;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        /* Login card */
+        .login-card {
+            background: linear-gradient(145deg, #0C1628, #102038, #0C1628);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            padding: 40px 36px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #1E8F60, #2ABF82, #3ED19A, #3A8AE8, #5BA3F5);
+        }
+
+        .login-card::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            right: -80px;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(58,138,232,0.07) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .card-heading {
+            color: var(--text-cream);
+            font-size: 1.35em;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .card-sub {
+            color: var(--text-muted);
+            font-size: 0.88em;
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        /* Form fields */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--accent-green);
+            font-size: 0.82em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(15, 8, 4, 0.7);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-black);
+            color: var(--text-cream);
+            transition: all 0.25s ease;
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-green);
+            box-shadow: var(--glow-green);
+            background: rgba(15, 8, 4, 0.9);
+        }
+
+        .form-input:hover:not(:focus) {
+            border-color: var(--border-green);
+        }
+
+        /* Password wrapper with show/hide */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-pw {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-dim);
+            font-size: 18px;
+            padding: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .toggle-pw:hover {
+            color: var(--accent-green);
+        }
+
+        /* Error alert */
+        .alert-error {
+            background: rgba(192, 80, 64, 0.18);
+            border: 1px solid rgba(192, 80, 64, 0.4);
+            border-left: 4px solid #C05040;
+            border-radius: 10px;
+            padding: 13px 16px;
+            color: #E8A090;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Submit button */
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1E8F60, #2ABF82, #3ED19A);
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            color: #060C18;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.25s ease;
+            box-shadow: var(--glow-green);
+            letter-spacing: 0.03em;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-green-lg);
+            background: linear-gradient(135deg, #2ABF82, #3ED19A, #5BA3F5);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        /* Footer note */
+        .login-footer {
+            text-align: center;
+            margin-top: 28px;
+            color: var(--text-dim);
+            font-size: 0.8em;
+        }
+
+        .login-footer span {
+            color: var(--accent-muted);
+            font-weight: 600;
+        }
+
+        /* Live indicator */
+        .live-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: rgba(42,191,130,0.10);
+            border: 1px solid rgba(42,191,130,0.30);
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+            color: var(--accent-green);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(42,191,130,0.85);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        /* Divider */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border-subtle);
+            margin: 24px 0;
+        }
+
+        .credentials-hint {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .credentials-hint p {
+            color: var(--text-dim);
+            font-size: 0.78em;
+        }
+
+        .credentials-hint code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-green);
+            background: rgba(143,175,106,0.1);
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+
+    <div class="login-wrapper">
+        <!-- Brand -->
+        <div class="brand">
+            <div class="live-chip">
+                <div class="live-dot"></div>
+                <span>Live Intelligence</span>
+            </div>
+            <div class="brand-title">🌍 NewsOrbit</div>
+            <div class="brand-sub">Global Intelligence Platform</div>
+        </div>
+
+        <!-- Card -->
+        <div class="login-card">
+            <div class="card-heading">Welcome back</div>
+            <div class="card-sub">Sign in to access your intelligence dashboard</div>
+
+            {% if error %}
+            <div class="alert-error">
+                <span>⚠️</span>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+
+            <form method="POST" action="/login" autocomplete="off">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input
+                        class="form-input"
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter your username"
+                        value="{{ username or '' }}"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input
+                            class="form-input"
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <button type="button" class="toggle-pw" onclick="togglePassword()" title="Show/hide password">👁</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login">🔑 Sign In to Dashboard</button>
+            </form>
+
+            <hr class="divider">
+
+            <div class="credentials-hint">
+                <p>Default credentials</p>
+                <p>Username: <code>admin</code> &nbsp;|&nbsp; Password: <code>newsOrbit2024</code></p>
+            </div>
+        </div>
+
+        <div class="login-footer">
+            Secured access &nbsp;·&nbsp; <span>NewsOrbit v2.0</span> &nbsp;·&nbsp; GDELT Intelligence Engine
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+    </script>
+</body>
+</html>

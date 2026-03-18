@@ -1,0 +1,15 @@
+pandas>=0.23
+numpy>=1.11.1
+requests>=2.11.1
+six>=1.10.0
+python-dateutil>=2.5.3
+beautifulsoup4
+
+Cython>=0.16
+shapely>=1.2.18
+fiona>=1.0.1
+pyproj>=1.9.3
+
+# for Python 2.7 and 2.6 (environment marker support as of pip 6.0)
+futures>2.0.0
+mock>1.0.1

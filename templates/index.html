@@ -1,0 +1,3845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsOrbit - Global News Intelligence Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* ── Battalic Blue Backgrounds ── */
+            --bg-primary:   #060C18;
+            --bg-secondary: #080E1C;
+            --bg-card:      #0C1628;
+            --bg-elevated:  #102038;
+
+            /* ── Evergreen (Primary Accent) ── */
+            --cyan-primary:  #2ABF82;
+            --blue-primary:  #3ED19A;
+            --purple:        #3A8AE8;
+            --success:       #24A870;
+            --danger:        #E05050;
+
+            /* ── Text: crisp steel-white family ── */
+            --text-primary:   #E4EEF6;
+            --text-secondary: #B0CCDE;
+            --text-tertiary:  #6E90AA;
+            --text-muted:     #3A5A72;
+
+            /* ── Borders ── */
+            --border-subtle: rgba(42, 191, 130, 0.10);
+            --border-medium: rgba(42, 191, 130, 0.24);
+
+            /* ── Shadows ── */
+            --shadow-sm: 0 1px 4px  rgba(0, 0, 0, 0.50);
+            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.60);
+            --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.70);
+            --shadow-xl: 0 22px 48px rgba(0, 0, 0, 0.80);
+
+            /* ── Glows ── */
+            --glow-cyan:        0 0 22px rgba(42, 191, 130, 0.45);
+            --glow-cyan-strong: 0 0 40px rgba(42, 191, 130, 0.65);
+
+            /* ── Battalic Blue highlight ── */
+            --battalion:       #3A8AE8;
+            --battalion-light: #5BA3F5;
+
+            /* ── Aliases (keep all CSS references working) ── */
+            --accent-cyan:    #2ABF82;
+            --accent-blue:    #3A8AE8;
+            --accent-purple:  #3A8AE8;
+            --accent-success: #24A870;
+            --accent-danger:  #E05050;
+            --amber:          #3A8AE8;
+            --amber-light:    #5BA3F5;
+            --glow-blue: 0 0 22px rgba(58, 138, 232, 0.45);
+            --glow-red:  0 0 22px rgba(224, 80, 80, 0.45);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background:
+                radial-gradient(ellipse at 15% 20%, rgba(42, 191, 130, 0.07) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 80%, rgba(58, 138, 232, 0.08) 0%, transparent 45%),
+                linear-gradient(160deg, #060C18 0%, #080E1C 40%, #0C1628 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 3-Panel Intelligence Workspace */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Professional Intelligence Header */
+        .header {
+            background: linear-gradient(135deg, #0C1628 0%, #060C18 60%, #102038 100%);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-medium);
+            border-radius: 16px;
+            padding: 32px 40px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            height: 48px;
+            width: auto;
+            filter: drop-shadow(0 0 16px rgba(6, 182, 212, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            filter: drop-shadow(0 0 24px rgba(6, 182, 212, 0.5));
+            transform: scale(1.05);
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .header-text h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--cyan-primary) 0%, var(--blue-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+
+        .header-text .subtitle {
+            font-size: 1em;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .header-text .tagline {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin: 0;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 24px;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--cyan-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--cyan-primary);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+            gap: 8px;
+            background: linear-gradient(135deg, var(--accent-danger) 0%, #dc2626 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 9999px;
+            font-size: 0.85em;
+            font-weight: 700;
+            margin-top: 20px;
+            box-shadow: var(--glow-red);
+            animation: livePulse 2s ease-in-out infinite;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); 
+            }
+            50% { 
+                transform: scale(1.05); 
+                box-shadow: 0 0 30px rgba(239, 68, 68, 0.8); 
+            }
+        }
+
+        .live-badge::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .fetch-status {
+            background: linear-gradient(135deg, rgba(36, 168, 112, 0.12), rgba(42, 191, 130, 0.18));
+            border-left: 4px solid var(--accent-success);
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: none;
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            box-shadow: var(--shadow-sm);
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fetch-status.active {
+            display: block;
+        }
+
+        /* Compact Professional Query Panel */
+        .controls {
+            background: linear-gradient(135deg, rgba(12, 22, 40, 0.96), rgba(6, 12, 24, 0.99));
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(42, 191, 130, 0.20);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .controls:hover {
+            box-shadow: var(--shadow-xl), var(--glow-cyan);
+        }
+
+        .control-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            align-items: end;
+        }
+
+        .control-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-item label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            letter-spacing: 0.01em;
+        }
+
+        .control-item input[type="text"],
+        .control-item select,
+        .control-item input[type="date"] {
+            padding: 14px 16px;
+            border: 1px solid rgba(42, 191, 130, 0.18);
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            background: rgba(6, 12, 24, 0.80);
+            backdrop-filter: blur(8px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .control-item input[type="text"]:focus,
+        .control-item select:focus,
+        .control-item input[type="date"]:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .control-item input[type="text"]:hover,
+        .control-item select:hover,
+        .control-item input[type="date"]:hover {
+            border-color: var(--border-medium);
+        }
+
+        .control-item select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232ABF82'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+            padding-right: 40px;
+        }
+
+        .control-item input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            filter: invert(72%) sepia(22%) saturate(480%) hue-rotate(60deg) brightness(95%) contrast(90%);
+        }
+
+        /* Primary Gradient Button */
+        .btn {
+            background: linear-gradient(135deg, var(--cyan-primary) 0%, var(--blue-primary) 100%);
+            color: white;
+            border: none;
+            padding: 16px 48px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-md), var(--glow-cyan);
+            letter-spacing: 0.02em;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: var(--shadow-lg), var(--glow-cyan-strong);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Professional Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-medium);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md), var(--glow-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card-icon {
+            font-size: 24px;
+            margin-bottom: 12px;
+            opacity: 0.8;
+        }
+
+        .stat-card h3 {
+            color: var(--text-tertiary);
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card .value {
+            font-size: 2.75em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3ED19A 0%, #2ABF82 45%, #5BA3F5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-card .label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .data-section {
+            background: linear-gradient(135deg, rgba(12, 22, 40, 0.96), rgba(6, 12, 24, 0.99));
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(42, 191, 130, 0.20);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .data-section h2 {
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            font-size: 1.75em;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .chart-container {
+            min-height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        table tr:hover {
+            background: rgba(42, 191, 130, 0.06);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid rgba(143, 175, 106, 0.15);
+            border-top: 4px solid var(--accent-cyan);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+            box-shadow: var(--glow-cyan);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.95));
+            backdrop-filter: blur(12px);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+            line-height: 1.6;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .error strong {
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .error em {
+            color: #fecaca;
+            font-size: 0.9em;
+        }
+
+        .list-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .list-box {
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-medium);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .list-box:hover {
+            box-shadow: var(--shadow-md);
+            border-color: rgba(42, 191, 130, 0.38);
+            transform: translateY(-2px);
+        }
+
+        .list-box h3 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            letter-spacing: 0.01em;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95em;
+            min-height: 48px;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item span:first-child {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 1em;
+            letter-spacing: 0.02em;
+            flex: 1;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 700;
+            box-shadow: var(--shadow-sm);
+            min-width: 45px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .clickable-stat {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin: 2px -16px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .clickable-stat:hover {
+            background: rgba(42, 191, 130, 0.10);
+            border-color: rgba(42, 191, 130, 0.26);
+            transform: translateX(6px);
+            box-shadow: 0 0 20px rgba(42, 191, 130, 0.15);
+        }
+
+        .clickable-stat:hover span:first-child {
+            color: var(--accent-cyan);
+            text-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
+        }
+
+        .clickable-stat:active {
+            transform: translateX(3px);
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 0.95em;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .event-card {
+            background: var(--bg-secondary);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 3px solid var(--accent-cyan);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+            border-left-color: var(--accent-blue);
+        }
+
+        .event-card strong {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        /* Professional Hierarchical Explorer */
+        .hierarchical-explorer {
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-medium);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tree-node {
+            border-bottom: 1px solid var(--border-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .tree-node:last-child {
+            border-bottom: none;
+        }
+
+        .node-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .node-header:hover {
+            background: rgba(42, 191, 130, 0.07);
+        }
+
+        .node-header.active {
+            background: rgba(42, 191, 130, 0.13);
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        .expand-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            transition: transform 0.3s ease;
+            color: var(--accent-cyan);
+            flex-shrink: 0;
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(90deg);
+        }
+
+        .node-icon {
+            font-size: 20px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .node-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .node-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 15px;
+            letter-spacing: 0.01em;
+        }
+
+        .node-count {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        .node-badge {
+            background: rgba(58, 138, 232, 0.18);
+            color: var(--battalion);
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid rgba(58, 138, 232, 0.34);
+        }
+
+        .node-children {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background: var(--bg-secondary);
+        }
+
+        .node-children.expanded {
+            max-height: 10000px;
+        }
+
+        /* Level 2: Domains */
+        .domain-node {
+            padding-left: 40px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .domain-node .node-header {
+            padding: 12px 18px;
+        }
+
+        .domain-node .node-title {
+            font-size: 14px;
+        }
+
+        .node-tone {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .node-tone.positive {
+            color: var(--accent-success);
+        }
+
+        .node-tone.negative {
+            color: var(--accent-danger);
+        }
+
+        /* Level 3: Events */
+        .event-node {
+            padding: 10px 18px 10px 70px;
+            border-bottom: 1px solid rgba(255, 255, 255,0.02);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .event-node:hover {
+            background: rgba(42, 191, 130, 0.06);
+            border-left: 2px solid var(--accent-cyan);
+        }
+
+        .event-node-content {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .event-date {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+            min-width: 80px;
+        }
+
+        .event-actors {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .event-actor-name {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .event-score {
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .event-score.positive {
+            background: rgba(36, 168, 112, 0.18);
+            color: var(--accent-success);
+            border: 1px solid rgba(36, 168, 112, 0.34);
+        }
+
+        .event-score.negative {
+            background: rgba(224, 80, 80, 0.16);
+            color: var(--accent-danger);
+            border: 1px solid rgba(224, 80, 80, 0.32);
+        }
+
+        .event-score.neutral {
+            background: rgba(100, 116, 139, 0.2);
+            color: var(--text-muted);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+
+        /* Professional Event Detail Modal */
+        .event-detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 5, 2, 0.95);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .event-detail-modal.active {
+            display: flex;
+        }
+
+        .event-detail-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-medium);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl), var(--glow-cyan);
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--accent-danger);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.3);
+            transform: scale(1.1);
+        }
+
+        .modal-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--accent-cyan);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .modal-meta {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .detail-item {
+            background: var(--bg-secondary);
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .detail-value.large {
+            font-size: 20px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: var(--text-tertiary);
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ════════════════════════════════════════
+           SAVED INTELLIGENCE LIBRARY — CSS
+        ════════════════════════════════════════ */
+
+        /* Save trigger button inside event modal */
+        .sil-save-trigger {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 11px 22px; border-radius: 10px; border: none; cursor: pointer;
+            background: linear-gradient(135deg, rgba(42,191,130,0.15), rgba(42,191,130,0.08));
+            border: 1px solid rgba(42,191,130,0.35);
+            color: #2ABF82; font-size: 0.9em; font-weight: 700;
+            font-family: 'Inter', sans-serif; transition: all 0.18s ease;
+        }
+        .sil-save-trigger:hover {
+            background: linear-gradient(135deg,#1E8F60,#2ABF82);
+            color: #060C18; box-shadow: 0 0 18px rgba(42,191,130,0.5);
+        }
+
+        /* Save modal overlay */
+        .sil-modal-overlay {
+            display: none; position: fixed; inset: 0; z-index: 9000;
+            background: rgba(6,12,24,0.82); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center;
+        }
+        .sil-modal-overlay.active { display: flex; }
+        .sil-modal {
+            width: 560px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
+            background: linear-gradient(145deg,#0C1628,#0F1E38);
+            border: 1px solid rgba(42,191,130,0.28); border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 40px rgba(42,191,130,0.08);
+        }
+        .sil-modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 24px 16px; border-bottom: 1px solid rgba(42,191,130,0.12);
+            font-size: 1.05em; font-weight: 700; color: #2ABF82;
+        }
+        .sil-modal-close {
+            background: none; border: none; color: var(--text-muted); font-size: 1.3em;
+            cursor: pointer; line-height: 1; transition: color 0.15s;
+        }
+        .sil-modal-close:hover { color: var(--text-primary); }
+        .sil-modal-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+        .sil-modal-footer {
+            display: flex; gap: 12px; justify-content: flex-end;
+            padding: 16px 24px; border-top: 1px solid rgba(42,191,130,0.10);
+        }
+        .sil-form-row { display: flex; flex-direction: column; gap: 6px; }
+        .sil-form-two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .sil-form-label { font-size: 0.82em; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.04em; text-transform: uppercase; }
+        .sil-domain-scroll { height: auto; overflow-y: auto; padding: 4px 0 !important; scrollbar-width: thin; scrollbar-color: rgba(42,191,130,0.4) transparent; }
+        .sil-domain-scroll option { padding: 9px 14px; font-size: 0.92em; cursor: pointer; }
+        .sil-domain-scroll option:checked, .sil-domain-scroll option:hover { background: rgba(42,191,130,0.18); color: #2ABF82; }
+        .sil-form-input, .sil-form-select, .sil-form-textarea {
+            background: rgba(6,12,24,0.85); border: 1px solid rgba(42,191,130,0.18);
+            border-radius: 10px; color: var(--text-primary); font-family: 'Inter',sans-serif;
+            font-size: 0.92em; padding: 10px 14px; transition: border-color 0.15s;
+            width: 100%; box-sizing: border-box;
+        }
+        .sil-form-input:focus, .sil-form-select:focus, .sil-form-textarea:focus {
+            outline: none; border-color: #2ABF82; box-shadow: 0 0 0 3px rgba(42,191,130,0.12);
+        }
+        .sil-form-textarea { min-height: 90px; resize: vertical; }
+        .sil-btn-cancel {
+            padding: 10px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+            background: transparent; color: var(--text-secondary); cursor: pointer;
+            font-family: 'Inter',sans-serif; font-size: 0.9em; transition: all 0.15s;
+        }
+        .sil-btn-cancel:hover { background: rgba(255,255,255,0.06); }
+        .sil-btn-save {
+            padding: 10px 22px; border-radius: 10px; border: none;
+            background: linear-gradient(135deg,#1E8F60,#2ABF82); color: #060C18;
+            font-weight: 700; font-family: 'Inter',sans-serif; font-size: 0.9em;
+            cursor: pointer; transition: all 0.15s;
+        }
+        .sil-btn-save:hover { box-shadow: 0 0 20px rgba(42,191,130,0.5); }
+
+        /* Workspace */
+        .sil-workspace { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+        .sil-ws-header {
+            padding: 22px 28px 18px; border-bottom: 1px solid rgba(42,191,130,0.14);
+            display: flex; flex-wrap: wrap; align-items: center; gap: 16px;
+            background: rgba(6,12,24,0.6); backdrop-filter: blur(12px);
+            position: sticky; top: 0; z-index: 10;
+        }
+        .sil-ws-title { font-size: 1.3em; font-weight: 800; color: #2ABF82; white-space: nowrap; }
+        .sil-ws-toolbar { display: flex; flex-wrap: wrap; gap: 10px; flex: 1; justify-content: flex-end; align-items: center; }
+        .sil-search {
+            padding: 9px 14px; border: 1px solid rgba(42,191,130,0.20); border-radius: 10px;
+            background: rgba(6,12,24,0.85); color: var(--text-primary); font-family: 'Inter',sans-serif;
+            font-size: 0.88em; width: 220px; transition: border-color 0.15s;
+        }
+        .sil-search:focus { outline: none; border-color: #2ABF82; }
+        .sil-filter-sel {
+            padding: 9px 12px; border: 1px solid rgba(42,191,130,0.18); border-radius: 10px;
+            background: rgba(6,12,24,0.85); color: var(--text-primary); font-family: 'Inter',sans-serif;
+            font-size: 0.85em; cursor: pointer;
+        }
+        .sil-close-ws {
+            padding: 9px 16px; border-radius: 10px; border: 1px solid rgba(255,100,100,0.25);
+            background: rgba(255,80,80,0.08); color: #ff6b6b; font-family: 'Inter',sans-serif;
+            font-size: 0.85em; font-weight: 600; cursor: pointer; transition: all 0.15s;
+        }
+        .sil-close-ws:hover { background: rgba(255,80,80,0.18); }
+        .sil-ws-body { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+
+        /* Left panel */
+        .sil-left-panel {
+            width: 190px; flex-shrink: 0; padding: 14px 10px;
+            border-right: 1px solid rgba(42,191,130,0.10); overflow-y: auto;
+            height: 100%; box-sizing: border-box;
+        }
+        .sil-panel-title { font-size: 0.7em; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; padding-left: 8px; }
+        .sil-folder {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 9px 10px; border-radius: 9px; cursor: pointer;
+            font-size: 0.85em; color: var(--text-secondary); transition: all 0.14s; margin-bottom: 2px;
+        }
+        .sil-folder:hover { background: rgba(42,191,130,0.08); color: var(--text-primary); }
+        .sil-folder.active { background: rgba(42,191,130,0.14); color: #2ABF82; font-weight: 700; }
+        .sil-folder-count {
+            background: rgba(42,191,130,0.15); color: #2ABF82; border-radius: 20px;
+            padding: 1px 8px; font-size: 0.75em; font-weight: 700; min-width: 20px; text-align: center;
+        }
+
+        /* Center panel */
+        .sil-center-panel { flex: 1; overflow-y: auto; padding: 14px 14px; display: flex; flex-direction: column; gap: 10px; height: 100%; box-sizing: border-box; min-width: 0; }
+        .sil-card {
+            background: rgba(12,22,40,0.85); border: 1px solid rgba(42,191,130,0.10);
+            border-radius: 14px; padding: 14px 16px; cursor: pointer;
+            transition: all 0.16s ease; position: relative;
+        }
+        .sil-card:hover { border-color: rgba(42,191,130,0.30); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+        .sil-card.sil-card-active { border-color: #2ABF82; box-shadow: 0 0 18px rgba(42,191,130,0.20); }
+        .sil-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+        .sil-card-domain { font-size: 0.75em; font-weight: 700; color: #2ABF82; background: rgba(42,191,130,0.10); padding: 3px 8px; border-radius: 6px; }
+        .sil-card-date { font-size: 0.72em; color: var(--text-muted); }
+        .sil-card-title { font-size: 0.9em; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; line-height: 1.4; }
+        .sil-card-country { font-size: 0.78em; color: var(--text-secondary); margin-bottom: 7px; }
+        .sil-card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+        .sil-tag { background: rgba(42,191,130,0.08); border: 1px solid rgba(42,191,130,0.18); color: #3ED19A; border-radius: 6px; padding: 2px 8px; font-size: 0.72em; font-weight: 600; }
+        .sil-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); line-height: 2; }
+
+        /* Right panel */
+        .sil-right-panel {
+            width: 340px; flex-shrink: 0; border-left: 1px solid rgba(42,191,130,0.10);
+            overflow-y: auto; padding: 20px; height: 100%; box-sizing: border-box;
+        }
+        .sil-detail-placeholder { text-align: center; padding: 80px 20px; color: var(--text-muted); font-size: 2em; line-height: 2; }
+        .sil-detail-placeholder span { font-size: 0.45em; display: block; color: var(--text-muted); }
+        .sil-detail-view { display: flex; flex-direction: column; gap: 12px; }
+        .sil-detail-domain { font-size: 0.78em; font-weight: 700; color: #2ABF82; background: rgba(42,191,130,0.10); padding: 4px 10px; border-radius: 7px; align-self: flex-start; }
+        .sil-detail-title { font-size: 1.05em; font-weight: 700; color: var(--text-primary); line-height: 1.4; }
+        .sil-detail-meta { font-size: 0.8em; color: var(--text-muted); }
+        .sil-detail-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+        .sil-tag-input { background: rgba(6,12,24,0.85); border: 1px dashed rgba(42,191,130,0.3); border-radius: 6px; color: var(--text-primary); font-size: 0.75em; padding: 3px 8px; width: 90px; font-family: 'Inter',sans-serif; }
+        .sil-tag-input:focus { outline: none; border-color: #2ABF82; }
+        .sil-detail-url { font-size: 0.78em; color: #2ABF82; word-break: break-all; text-decoration: none; background: rgba(42,191,130,0.06); padding: 8px 10px; border-radius: 8px; display: block; border: 1px solid rgba(42,191,130,0.15); }
+        .sil-detail-url:hover { background: rgba(42,191,130,0.12); }
+        .sil-detail-section { font-size: 0.72em; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 4px; }
+        .sil-notes-edit { width: 100%; box-sizing: border-box; min-height: 100px; background: rgba(6,12,24,0.85); border: 1px solid rgba(42,191,130,0.18); border-radius: 10px; color: var(--text-primary); font-family: 'Inter',sans-serif; font-size: 0.88em; padding: 10px 12px; resize: vertical; }
+        .sil-notes-edit:focus { outline: none; border-color: #2ABF82; }
+        .sil-detail-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+        .sil-action-btn { padding: 9px 16px; border-radius: 9px; font-family: 'Inter',sans-serif; font-size: 0.83em; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; text-decoration: none; display: inline-flex; align-items: center; }
+        .sil-btn-open { background: rgba(42,191,130,0.12); border: 1px solid rgba(42,191,130,0.25); color: #2ABF82; }
+        .sil-btn-open:hover { background: rgba(42,191,130,0.22); }
+        .sil-btn-delete { background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.20); color: #ff6b6b; }
+        .sil-btn-delete:hover { background: rgba(255,80,80,0.18); }
+
+        /* ── Custom Calendar Picker ── */
+        .cal-wrap {
+            position: relative;
+        }
+
+        .cal-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            border: 1px solid rgba(42, 191, 130, 0.18);
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: rgba(6, 12, 24, 0.80);
+            backdrop-filter: blur(8px);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .cal-trigger:hover {
+            border-color: var(--border-medium);
+        }
+
+        .cal-trigger.open {
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .cal-trigger-icon { font-size: 1.1em; }
+
+        .cal-trigger-text { flex: 1; }
+
+        .cal-trigger-arrow {
+            color: var(--text-muted);
+            font-size: 0.75em;
+            transition: transform 0.2s ease;
+        }
+
+        .cal-trigger.open .cal-trigger-arrow { transform: rotate(180deg); }
+
+        .cal-popup {
+            position: fixed;
+            z-index: 9999;
+            width: 300px;
+            background: linear-gradient(145deg, #0C1628, #102038);
+            border: 1px solid rgba(42,191,130,0.28);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.75), var(--glow-cyan);
+            padding: 16px;
+            display: none;
+            animation: calSlideIn 0.18s ease-out;
+        }
+
+        .cal-popup.open { display: block; }
+
+        @keyframes calSlideIn {
+            from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0)  scale(1); }
+        }
+
+        /* Header row: < Month ▾ · Year ▾ > */
+        .cal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 4px;
+        }
+
+        .cal-nav-btn {
+            background: rgba(42,191,130,0.08);
+            border: 1px solid rgba(42,191,130,0.18);
+            color: #2ABF82;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 700;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .cal-nav-btn:hover {
+            background: rgba(42,191,130,0.18);
+            box-shadow: 0 0 12px rgba(42,191,130,0.30);
+        }
+
+        .cal-month-select,
+        .cal-year-select {
+            background: rgba(6,12,24,0.90);
+            border: 1px solid rgba(42,191,130,0.20);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.85em;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            padding: 5px 8px;
+            cursor: pointer;
+            transition: border-color 0.15s;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232ABF82'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+            background-size: 14px;
+            padding-right: 26px;
+        }
+
+        .cal-month-select:focus,
+        .cal-year-select:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        /* Day-of-week row */
+        .cal-dow-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 4px;
+        }
+
+        .cal-dow {
+            text-align: center;
+            font-size: 0.67em;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 4px 0;
+        }
+
+        /* Day grid */
+        .cal-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .cal-day {
+            text-align: center;
+            padding: 6px 2px;
+            border-radius: 7px;
+            font-size: 0.82em;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.14s ease;
+            line-height: 1.4;
+        }
+
+        .cal-day:hover {
+            background: rgba(42,191,130,0.12);
+            color: #2ABF82;
+        }
+
+        .cal-day.today {
+            border: 1px solid rgba(42,191,130,0.35);
+            color: #3ED19A;
+            font-weight: 700;
+        }
+
+        .cal-day.selected {
+            background: linear-gradient(135deg, #1E8F60, #2ABF82);
+            color: #060C18;
+            font-weight: 700;
+            box-shadow: 0 0 12px rgba(42,191,130,0.45);
+        }
+
+        .cal-day.other-month {
+            color: var(--text-muted);
+            opacity: 0.4;
+        }
+
+        .cal-day.disabled {
+            opacity: 0.2;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* Quick-jump row */
+        .cal-quick {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(42,191,130,0.10);
+        }
+
+        .cal-quick-btn {
+            flex: 1;
+            min-width: 60px;
+            padding: 5px 8px;
+            background: rgba(42,191,130,0.07);
+            border: 1px solid rgba(42,191,130,0.16);
+            border-radius: 7px;
+            color: #3ED19A;
+            font-size: 0.72em;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.14s ease;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .cal-quick-btn:hover {
+            background: rgba(42,191,130,0.16);
+            color: #2ABF82;
+        }
+
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100vw;
+        }
+
+        .sidebar {
+            width: 264px;
+            min-width: 264px;
+            background: linear-gradient(180deg, #050A15 0%, #060C18 45%, #070F1E 100%);
+            border-right: 1px solid rgba(42, 191, 130, 0.14);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 100;
+            box-shadow: 4px 0 28px rgba(0, 0, 0, 0.55);
+            transition: width 0.32s cubic-bezier(0.4,0,0.2,1), min-width 0.32s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        /* ── Collapsed sidebar ── */
+        .sidebar.sb-collapsed {
+            width: 64px;
+            min-width: 64px;
+            cursor: pointer;
+        }
+        .sidebar.sb-collapsed .sidebar-live,
+        .sidebar.sb-collapsed .sidebar-brand-text,
+        .sidebar.sb-collapsed .nav-label,
+        .sidebar.sb-collapsed .nav-badge,
+        .sidebar.sb-collapsed .nav-section-label,
+        .sidebar.sb-collapsed .sidebar-footer,
+        .sidebar.sb-collapsed .sb-collapse-btn { display: none; }
+        .sidebar.sb-collapsed .sidebar-brand {
+            flex-direction: column; justify-content: center;
+            padding: 16px 0 10px; border-bottom-color: transparent; gap: 6px;
+        }
+        .sidebar.sb-collapsed .sidebar-nav { padding: 4px 8px; }
+        .sidebar.sb-collapsed .nav-item { justify-content: center; padding: 12px 0; gap: 0; }
+        .sidebar.sb-collapsed .nav-item.nav-active {
+            border-left: none; padding-left: 0;
+            border-bottom: 2px solid #2ABF82; border-radius: 0;
+        }
+        /* Vertical brand name in collapsed state */
+        .sb-vert-label {
+            display: none;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72em;
+            font-weight: 800;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(42,191,130,0.25);
+            cursor: pointer;
+            user-select: none;
+            padding: 12px 0;
+        }
+        .sidebar.sb-collapsed .sb-vert-label { display: flex; }
+        /* Collapse/expand toggle button */
+        .sb-collapse-btn {
+            background: none; border: none; color: var(--text-muted);
+            cursor: pointer; padding: 4px 7px; border-radius: 7px;
+            font-size: 1em; transition: all 0.15s; line-height: 1;
+            margin-left: auto; flex-shrink: 0;
+        }
+        .sb-collapse-btn:hover { color: #2ABF82; background: rgba(42,191,130,0.1); }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 28px;
+            min-width: 0;
+        }
+
+        /* — Brand — */
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 28px 18px 20px;
+            border-bottom: 1px solid rgba(42, 191, 130, 0.14);
+        }
+
+        .sidebar-planet {
+            font-size: 38px;
+            filter: drop-shadow(0 0 16px rgba(42, 191, 130, 0.75));
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand-text { flex: 1; }
+
+        .sidebar-title {
+            font-size: 1.18em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2ABF82, #3ED19A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.74em;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        /* — Live chip — */
+        .sidebar-live {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 12px 14px 14px;
+            padding: 11px 16px;
+            background: rgba(42, 191, 130, 0.09);
+            border: 1px solid rgba(42, 191, 130, 0.28);
+            border-radius: 22px;
+        }
+
+        .sidebar-live-dot {
+            width: 9px;
+            height: 9px;
+            background: #2ABF82;
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(42, 191, 130, 0.90);
+            animation: pulse 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        .sidebar-live-text {
+            font-size: 0.74em;
+            font-weight: 800;
+            color: #2ABF82;
+            letter-spacing: 0.11em;
+            text-transform: uppercase;
+        }
+
+        /* — Navigation — */
+        .sidebar-nav {
+            flex: 0 0 auto;
+            padding: 4px 12px;
+        }
+
+        .nav-section-label {
+            font-size: 0.65em;
+            font-weight: 800;
+            color: var(--text-muted);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 16px 6px 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 15px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: all 0.18s ease;
+            margin-bottom: 5px;
+        }
+
+        .nav-item:hover {
+            background: rgba(42, 191, 130, 0.09);
+            color: var(--text-primary);
+        }
+
+        .nav-item.nav-active {
+            background: rgba(42, 191, 130, 0.15);
+            color: #2ABF82;
+            font-weight: 700;
+            border-left: 3px solid #2ABF82;
+            padding-left: 13px;
+        }
+
+        .nav-icon { font-size: 20px; flex-shrink: 0; }
+        .nav-label { flex: 1; }
+
+        .nav-badge {
+            background: rgba(42, 191, 130, 0.17);
+            color: #2ABF82;
+            font-size: 0.75em;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 10px;
+            border: 1px solid rgba(42, 191, 130, 0.30);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Panels visible only in expanded sidebar */
+        .sb-collapsed .sb-exp-only { display: none !important; }
+
+        /* — Live Metrics panel — */
+        .sidebar-metrics {
+            margin: 4px 12px 12px;
+            padding: 16px 18px;
+            background: rgba(12, 22, 40, 0.85);
+            border: 1px solid rgba(42, 191, 130, 0.18);
+            border-radius: 16px;
+        }
+
+        .sm-header {
+            font-size: 0.65em;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 13px;
+        }
+
+        .sm-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.86em;
+        }
+
+        .sm-row:last-child { border-bottom: none; }
+        .sm-label { color: var(--text-secondary); font-weight: 500; }
+
+        .sm-value {
+            color: #3ED19A;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.97em;
+        }
+
+        .sm-value.sm-ok { color: #24A870; }
+
+        /* — Trending News section — */
+        .trending-section {
+            margin-top: 32px;
+        }
+        .trending-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .trending-title-text {
+            font-size: 1.12em;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+        .trending-date-badge {
+            font-size: 0.72em;
+            font-weight: 700;
+            color: #2ABF82;
+            background: rgba(42,191,130,0.10);
+            border: 1px solid rgba(42,191,130,0.22);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .trending-live {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #2ABF82;
+            box-shadow: 0 0 8px rgba(42,191,130,0.9);
+            animation: pulse 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+        .trend-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: rgba(12,22,40,0.70);
+            border: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 8px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.18s ease;
+            cursor: pointer;
+        }
+        .trend-card:hover {
+            background: rgba(42,191,130,0.07);
+            border-color: rgba(42,191,130,0.22);
+            transform: translateX(3px);
+        }
+        .trend-rank {
+            font-size: 1.15em;
+            font-weight: 900;
+            min-width: 32px;
+            text-align: center;
+            padding-top: 2px;
+            flex-shrink: 0;
+        }
+        .trend-body { flex: 1; min-width: 0; }
+        .trend-title {
+            font-size: 0.93em;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 7px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .trend-meta { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+        .trend-badge {
+            font-size: 0.68em;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+        .trend-source-badge {
+            background: rgba(91,163,245,0.13);
+            border: 1px solid rgba(91,163,245,0.25);
+            color: #5BA3F5;
+        }
+        .trend-domain-badge {
+            background: rgba(42,191,130,0.10);
+            border: 1px solid rgba(42,191,130,0.22);
+            color: #2ABF82;
+        }
+        .trend-country-badge {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.10);
+            color: var(--text-secondary);
+        }
+        .trend-stat-badge {
+            background: rgba(255,200,80,0.10);
+            border: 1px solid rgba(255,200,80,0.22);
+            color: #FFD760;
+        }
+        .tone-pos {
+            background: rgba(42,191,130,0.12);
+            border: 1px solid rgba(42,191,130,0.25);
+            color: #2ABF82;
+        }
+        .tone-neg {
+            background: rgba(239,68,68,0.10);
+            border: 1px solid rgba(239,68,68,0.25);
+            color: #F87171;
+        }
+        .tone-neu {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.10);
+            color: var(--text-muted);
+        }
+        .trend-arrow {
+            color: var(--text-muted);
+            font-size: 1.1em;
+            padding-top: 2px;
+            flex-shrink: 0;
+            transition: color 0.18s;
+        }
+        .trend-card:hover .trend-arrow { color: #2ABF82; }
+        .trending-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.9em;
+            text-align: center;
+        }
+        .tp-icon { font-size: 2em; }
+
+        /* — Data Source card — */
+        .sidebar-source {
+            margin: 0 10px 10px;
+            padding: 12px 14px;
+            background: rgba(58, 138, 232, 0.06);
+            border: 1px solid rgba(58, 138, 232, 0.18);
+            border-radius: 14px;
+            display: flex;
+            gap: 11px;
+            align-items: flex-start;
+        }
+
+        .src-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+
+        .src-name {
+            font-size: 0.82em;
+            font-weight: 700;
+            color: #5BA3F5;
+            margin-bottom: 4px;
+        }
+
+        .src-desc {
+            font-size: 0.71em;
+            color: var(--text-tertiary);
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .src-freq {
+            font-size: 0.68em;
+            color: #2ABF82;
+            font-weight: 600;
+        }
+
+        /* ── Sidebar AI Assistant ── */
+        /* ── AI language selector ── */
+        .ai-lang-sel {
+            background: rgba(6,12,24,0.85); border: 1px solid rgba(42,191,130,0.22);
+            color: #2ABF82; border-radius: 7px; padding: 4px 8px;
+            font-size: 0.78em; font-family: 'Inter',sans-serif;
+            cursor: pointer; outline: none; max-width: 160px;
+        }
+        .ai-lang-sel option { background: #060C18; color: #e2e8f0; }
+        /* ── AI thinking indicator ── */
+        .ai-gemini-badge {
+            font-size: 0.65em; background: rgba(42,191,130,0.1);
+            border: 1px solid rgba(42,191,130,0.25); border-radius: 20px;
+            padding: 2px 8px; color: #2ABF82; font-weight: 600;
+            letter-spacing: 0.04em; white-space: nowrap;
+        }
+        .ai-msg-bot pre {
+            white-space: pre-wrap; word-break: break-word;
+            background: rgba(0,0,0,0.3); border-radius: 6px;
+            padding: 8px 10px; margin: 4px 0; font-size: 0.9em;
+            border-left: 2px solid rgba(42,191,130,0.4);
+        }
+        .ai-msg-bot ul, .ai-msg-bot ol {
+            margin: 4px 0 4px 18px; padding: 0;
+        }
+        .ai-drawer {
+            position: fixed; top: 0; left: 264px; right: 0; bottom: 0;
+            z-index: 800; display: none;
+            flex-direction: column;
+            background: linear-gradient(135deg, #060C18, #0C1628);
+        }
+        .ai-drawer.ai-open { display: flex; }
+        .ai-drawer-header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 18px 28px 16px; flex-shrink: 0;
+            background: rgba(6,12,24,0.85);
+            border-bottom: 1px solid rgba(42,191,130,0.14);
+            backdrop-filter: blur(8px);
+        }
+        .ai-drawer-title {
+            font-size: 1.08em; font-weight: 700; color: #2ABF82;
+            letter-spacing: 0.04em;
+        }
+        .ai-drawer-subtitle {
+            font-size: 0.75em; color: var(--text-muted); margin-left: 4px;
+        }
+        .ai-drawer-close {
+            margin-left: auto; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted); font-size: 0.85em; cursor: pointer;
+            padding: 5px 10px; border-radius: 8px; transition: all 0.15s;
+            font-weight: 600;
+        }
+        .ai-drawer-close:hover { color: #fff; background: rgba(255,255,255,0.12); }
+        .ai-hdr-dot {
+            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+            background: #2ABF82; box-shadow: 0 0 10px rgba(42,191,130,0.8);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        /* Centered chat body */
+        .ai-drawer-body {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; min-height: 0; overflow: hidden;
+            padding: 0 24px;
+        }
+        .ai-drawer-body .ai-messages {
+            width: 100%; max-width: 760px;
+        }
+        .ai-drawer-body .ai-suggestions {
+            width: 100%; max-width: 760px;
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .ai-drawer-body .ai-sug-card {
+            padding: 18px 10px 16px; font-size: 0.82em;
+        }
+        .ai-drawer-body .ai-sug-icon { font-size: 2em; }
+        /* Footer input bar */
+        .ai-drawer-footer {
+            flex-shrink: 0; display: flex; flex-direction: column;
+            align-items: center; gap: 8px;
+            padding: 10px 24px 18px;
+            background: rgba(6,12,24,0.7);
+            border-top: 1px solid rgba(42,191,130,0.10);
+            backdrop-filter: blur(6px);
+        }
+        .ai-drawer-footer .ai-chips {
+            width: 100%; max-width: 760px;
+            border-top: none; padding: 0;
+        }
+        .ai-drawer-footer .ai-input-row {
+            width: 100%; max-width: 760px;
+            border-top: none; padding: 0;
+            background: transparent;
+        }
+        .ai-drawer-footer .ai-input {
+            font-size: 0.88em; padding: 10px 14px;
+            min-height: 42px;
+        }
+        .ai-drawer-footer .ai-send {
+            width: 42px; height: 42px; font-size: 1em;
+        }
+        .ai-messages {
+            flex: 1; overflow-y: auto; display: flex; flex-direction: column;
+            gap: 7px; padding: 10px 10px 6px; min-height: 0;
+            scrollbar-width: thin; scrollbar-color: rgba(42,191,130,0.2) transparent;
+        }
+        .ai-msg {
+            border-radius: 10px; padding: 8px 10px;
+            font-size: 0.76em; line-height: 1.55; word-break: break-word;
+        }
+        .ai-msg-bot {
+            background: rgba(12,22,40,0.95); border: 1px solid rgba(42,191,130,0.10);
+            color: var(--text-secondary); align-self: flex-start;
+        }
+        .ai-msg-bot strong { color: #2ABF82; }
+        .ai-msg-user {
+            background: rgba(42,191,130,0.13); border: 1px solid rgba(42,191,130,0.22);
+            color: var(--text-primary); align-self: flex-end; text-align: right;
+        }
+        .ai-chips {
+            display: flex; flex-wrap: wrap; gap: 4px;
+            padding: 5px 10px 5px; flex-shrink: 0;
+            border-top: 1px solid rgba(42,191,130,0.07);
+        }
+        .ai-chip {
+            background: rgba(42,191,130,0.07); border: 1px solid rgba(42,191,130,0.15);
+            color: #3ED19A; border-radius: 20px; padding: 3px 8px;
+            font-size: 0.67em; font-weight: 600; cursor: pointer;
+            transition: all 0.14s; white-space: nowrap;
+        }
+        .ai-chip:hover { background: rgba(42,191,130,0.18); color: #fff; }
+        .ai-suggestions {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+            padding: 4px 0 2px; flex-shrink: 0; margin-top: 4px;
+        }
+        .ai-sug-card {
+            background: rgba(42,191,130,0.05);
+            border: 1px solid rgba(42,191,130,0.12);
+            border-radius: 10px; padding: 10px 6px 9px;
+            cursor: pointer; transition: background 0.14s, border-color 0.14s;
+            text-align: center; color: var(--text-secondary);
+            font-size: 0.7em; display: flex; flex-direction: column;
+            align-items: center; gap: 4px;
+        }
+        .ai-sug-card:hover { background: rgba(42,191,130,0.13); border-color: rgba(42,191,130,0.4); color: #fff; }
+        .ai-sug-icon { font-size: 1.55em; line-height: 1; }
+        .ai-sug-label { font-weight: 600; line-height: 1.2; }
+        .ai-input-row {
+            display: flex; gap: 5px; align-items: flex-end;
+            padding: 6px 8px 8px; flex-shrink: 0;
+            border-top: 1px solid rgba(42,191,130,0.10);
+            background: rgba(6,12,24,0.4);
+        }
+        .ai-input {
+            flex: 1; background: rgba(6,12,24,0.9);
+            border: 1px solid rgba(42,191,130,0.18); border-radius: 9px;
+            color: var(--text-primary); font-family: 'Inter',sans-serif;
+            font-size: 0.76em; padding: 7px 9px; resize: none; outline: none;
+            min-height: 32px; max-height: 72px; overflow-y: auto;
+            transition: border-color 0.15s; scrollbar-width: none;
+        }
+        .ai-input:focus { border-color: #2ABF82; }
+        .ai-input::placeholder { color: var(--text-muted); font-size: 0.95em; }
+        .ai-send {
+            background: linear-gradient(135deg,#1E8F60,#2ABF82); border: none;
+            border-radius: 9px; color: #060C18; font-weight: 900;
+            cursor: pointer; width: 32px; height: 32px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9em; transition: all 0.15s;
+        }
+        .ai-send:hover { box-shadow: 0 0 14px rgba(42,191,130,0.5); transform: scale(1.05); }
+        .ai-typing { display: flex; gap: 4px; align-items: center; padding: 4px 2px; }
+        .ai-typing span {
+            width: 6px; height: 6px; border-radius: 50%; background: #2ABF82;
+            animation: aiDot 1.2s ease-in-out infinite;
+        }
+        .ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes aiDot { 0%,80%,100%{opacity:0.2;transform:scale(0.8)} 40%{opacity:1;transform:scale(1.1)} }
+
+        /* — Sidebar footer — */
+        .sidebar-footer {
+            padding: 14px 16px 20px;
+            border-top: 1px solid rgba(42, 191, 130, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .sidebar-logout {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 16px;
+            background: rgba(192, 80, 64, 0.13);
+            border: 1px solid rgba(192, 80, 64, 0.30);
+            border-radius: 22px;
+            font-size: 0.82em;
+            font-weight: 700;
+            color: #E8A090;
+            text-decoration: none;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            transition: background 0.2s ease;
+        }
+
+        .sidebar-logout:hover { background: rgba(192, 80, 64, 0.24); }
+
+        .sidebar-version {
+            font-size: 0.72em;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+
+        <!-- ══════════════════════════════════════════════════════
+             GLOBAL INTELLIGENCE PLATFORM — SIDEBAR
+        ══════════════════════════════════════════════════════ -->
+        <aside class="sidebar" id="globalSidebar">
+
+            <!-- Brand -->
+            <div class="sidebar-brand">
+                <div class="sidebar-planet">🌍</div>
+                <div class="sidebar-brand-text">
+                    <div class="sidebar-title">Global Intelligence</div>
+                    <div class="sidebar-subtitle">Platform</div>
+                </div>
+                <button class="sb-collapse-btn" onclick="toggleSidebar();event.stopPropagation();" title="Collapse sidebar">‹</button>
+            </div>
+
+            <!-- Live Status -->
+            <div class="sidebar-live">
+                <span class="sidebar-live-dot"></span>
+                <span class="sidebar-live-text">Live Monitoring</span>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Intelligence</div>
+
+                <a class="nav-item nav-active" id="navDashboard" href="#" onclick="setActiveNav(this); return false;">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a class="nav-item" id="navEvents" href="#" onclick="setActiveNav(this); document.getElementById('tableSelect').value='events'; return false;">
+                    <span class="nav-icon">🌍</span>
+                    <span class="nav-label">Events</span>
+                    <span class="nav-badge" id="sbEventCount" style="display:none;">0</span>
+                </a>
+                <a class="nav-item" id="navLibrary" href="#" onclick="setActiveNav(this); openLibrary(); return false;">
+                    <span class="nav-icon">📚</span>
+                    <span class="nav-label">Saved Intelligence</span>
+                    <span class="nav-badge" id="sbLibCount" style="display:none;">0</span>
+                </a>
+                <a class="nav-item" id="navAI" href="#" onclick="setActiveNav(this); openAiPanel(); return false;">
+                    <span class="nav-icon">🤖</span>
+                    <span class="nav-label">AI Assistant</span>
+                </a>
+            </nav>
+
+            <!-- Equal-space top: pushes metrics to centre -->
+            <div class="sb-exp-only" style="flex:1;"></div>
+
+            <!-- Live Metrics — hidden when sidebar is collapsed -->
+            <div class="sidebar-metrics sb-exp-only">
+                <div class="sm-header">📡 Live Feed</div>
+                <div class="sm-row">
+                    <span class="sm-label">Records</span>
+                    <span class="sm-value" id="sbRecords">—</span>
+                </div>
+                <div class="sm-row">
+                    <span class="sm-label">Countries</span>
+                    <span class="sm-value" id="sbCountries">—</span>
+                </div>
+                <div class="sm-row">
+                    <span class="sm-label">Goldstein</span>
+                    <span class="sm-value" id="sbTone">—</span>
+                </div>
+                <div class="sm-row">
+                    <span class="sm-label">Status</span>
+                    <span class="sm-value sm-ok">● Active</span>
+                </div>
+            </div>
+
+            <!-- Equal-space bottom: pushes footer down -->
+            <div class="sb-exp-only" style="flex:1;"></div>
+
+            <!-- Vertical brand label: only shows when sidebar is collapsed -->
+            <div class="sb-vert-label" onclick="toggleSidebar()">NewsOrbit Intelligence</div>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <a href="/logout" class="sidebar-logout">🚪 Sign Out</a>
+                <div class="sidebar-version">NewsOrbit v2.0</div>
+            </div>
+
+        </aside>
+
+        <!-- ══════════════════════════════════════════════════════
+             AI INTELLIGENCE ASSISTANT — RIGHT DRAWER
+        ══════════════════════════════════════════════════════ -->
+        <div class="ai-drawer" id="aiDrawer">
+            <!-- Header -->
+            <div class="ai-drawer-header">
+                <span class="ai-hdr-dot"></span>
+                <span class="ai-drawer-title">🤖 AI Intelligence Assistant</span>
+                <span class="ai-gemini-badge">✨ Gemini</span>
+                <select class="ai-lang-sel" id="aiLangSel" title="Response language">
+                    <option value="en">🇬🇧 English</option>
+                    <option value="hi">🇮🇳 Hindi</option>
+                    <option value="ta">🇮🇳 Tamil</option>
+                    <option value="te">🇮🇳 Telugu</option>
+                    <option value="kn">🇮🇳 Kannada</option>
+                    <option value="ml">🇮🇳 Malayalam</option>
+                    <option value="mr">🇮🇳 Marathi</option>
+                    <option value="bn">🇧🇩 Bengali</option>
+                    <option value="gu">🇮🇳 Gujarati</option>
+                    <option value="pa">🇮🇳 Punjabi</option>
+                    <option value="ur">🇵🇰 Urdu</option>
+                    <option value="fr">🇫🇷 French</option>
+                    <option value="de">🇩🇪 German</option>
+                    <option value="es">🇪🇸 Spanish</option>
+                    <option value="pt">🇵🇹 Portuguese</option>
+                    <option value="ar">🇸🇦 Arabic</option>
+                    <option value="zh">🇨🇳 Chinese</option>
+                    <option value="ja">🇯🇵 Japanese</option>
+                    <option value="ko">🇰🇷 Korean</option>
+                    <option value="ru">🇷🇺 Russian</option>
+                    <option value="tr">🇹🇷 Turkish</option>
+                    <option value="vi">🇻🇳 Vietnamese</option>
+                    <option value="id">🇮🇩 Indonesian</option>
+                </select>
+                <button class="ai-drawer-close" onclick="closeAiPanel()">✕ Close</button>
+            </div>
+            <!-- Messages -->
+            <div class="ai-drawer-body">
+                <div class="ai-messages" id="aiMessages">
+                    <div class="ai-msg ai-msg-bot">
+                        👋 <strong>Hello!</strong> I'm your <strong>NewsOrbit AI Assistant</strong>. Ask me anything about global events, news analysis, or your saved intelligence — in any language!
+                    </div>
+                    <div class="ai-suggestions" id="aiSuggestions">
+                        <div class="ai-sug-card" onclick="aiAsk('Give me a detailed analysis of the top countries in the current events data')"><span class="ai-sug-icon">🌍</span><span class="ai-sug-label">Top Countries Analysis</span></div>
+                        <div class="ai-sug-card" onclick="aiAsk('What are the event statistics and what do they tell us?')"><span class="ai-sug-icon">📊</span><span class="ai-sug-label">Event Stats</span></div>
+                        <div class="ai-sug-card" onclick="aiAsk('Summarize my saved intelligence articles')"><span class="ai-sug-icon">📚</span><span class="ai-sug-label">Saved Summary</span></div>
+                        <div class="ai-sug-card" onclick="aiAsk('Give me a full intelligence briefing on today\'s data')"><span class="ai-sug-icon">📰</span><span class="ai-sug-label">Full Briefing</span></div>
+                        <div class="ai-sug-card" onclick="aiAsk('Analyze the sentiment and tone of current events')"><span class="ai-sug-icon">📈</span><span class="ai-sug-label">Tone Analysis</span></div>
+                        <div class="ai-sug-card" onclick="aiAsk('What geopolitical trends can you identify from this data?')"><span class="ai-sug-icon">🔍</span><span class="ai-sug-label">Geopolitical Trends</span></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer: chips + input -->
+            <div class="ai-drawer-footer">
+                <div class="ai-chips">
+                    <span class="ai-chip" onclick="aiAsk('Analyze top countries in detail')">🌍 Top Countries</span>
+                    <span class="ai-chip" onclick="aiAsk('Give me a full intelligence briefing')">📰 Briefing</span>
+                    <span class="ai-chip" onclick="aiAsk('What is the current sentiment and tone?')">📈 Tone</span>
+                    <span class="ai-chip" onclick="aiAsk('Summarize saved articles')">📚 Saved</span>
+                    <span class="ai-chip" onclick="aiAsk('What major conflicts or events are happening?')">⚡ Conflicts</span>
+                    <span class="ai-chip" onclick="aiAsk('What geopolitical trends do you see?')">🔍 Trends</span>
+                </div>
+                <div class="ai-input-row">
+                    <textarea class="ai-input" id="aiInput" placeholder="Ask anything in any language..."
+                        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();aiSend();}"></textarea>
+                    <button class="ai-send" onclick="aiSend()" title="Send">▶</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+    <div class="container">
+        <!-- Professional Header -->
+        <div class="header">
+            <div class="header-left">
+                <img src="/static/images/logo.png" alt="NewsOrbit Logo" class="logo" id="logo" onerror="this.style.display='none'">
+                <div class="header-text">
+                    <h1>🌍 NewsOrbit</h1>
+                    <p>Global Intelligence Platform</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>LIVE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compact Query Panel -->
+        <div class="controls">
+            <div class="control-group">
+                <div class="control-item">
+                    <label>📅 Date</label>
+                    <!-- Custom Calendar Picker -->
+                    <div class="cal-wrap" id="calWrap">
+                        <div class="cal-trigger" id="calTrigger" onclick="toggleCalendar()">
+                            <span class="cal-trigger-icon">📅</span>
+                            <span class="cal-trigger-text" id="calTriggerText">Feb 1, 2026</span>
+                            <span class="cal-trigger-arrow">▼</span>
+                        </div>
+                        <div class="cal-popup" id="calPopup">
+                            <div class="cal-header">
+                                <button class="cal-nav-btn" onclick="calShift(-1,'year');event.stopPropagation()" title="Previous year">«</button>
+                                <button class="cal-nav-btn" onclick="calShift(-1,'month');event.stopPropagation()" title="Previous month">‹</button>
+                                <select class="cal-month-select" id="calMonthSel" onchange="calSetMonthYear();event.stopPropagation()"></select>
+                                <select class="cal-year-select" id="calYearSel" onchange="calSetMonthYear();event.stopPropagation()"></select>
+                                <button class="cal-nav-btn" onclick="calShift(1,'month');event.stopPropagation()" title="Next month">›</button>
+                                <button class="cal-nav-btn" onclick="calShift(1,'year');event.stopPropagation()" title="Next year">»</button>
+                            </div>
+                            <div class="cal-dow-row">
+                                <div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div>
+                                <div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div>
+                                <div class="cal-dow">Sa</div>
+                            </div>
+                            <div class="cal-days" id="calDays"></div>
+                            <div class="cal-quick">
+                                <button class="cal-quick-btn" onclick="calJumpTo(2026,1,1);event.stopPropagation()">Feb 2026</button>
+                                <button class="cal-quick-btn" onclick="calJumpTo(2025,9,1);event.stopPropagation()">Oct 2025</button>
+                                <button class="cal-quick-btn" onclick="calJumpTo(2024,0,1);event.stopPropagation()">Jan 2024</button>
+                                <button class="cal-quick-btn" onclick="calJumpTo(2016,10,1);event.stopPropagation()">Nov 2016</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Hidden ISO value consumed by queryData() -->
+                    <input type="hidden" id="calendarPicker" value="2026-02-01">
+                </div>
+                <div class="control-item">
+                    <label>📊 Table</label>
+                    <select id="tableSelect">
+                        <option value="events">Events</option>
+                    </select>
+                </div>
+                <div class="control-item">
+                    <label>🔢 NewsOrbit Data Engine</label>
+                    <select id="versionSelect">
+                        <option value="2">Version 2.0 (15-min)</option>
+                        <option value="1">Version 1.0 (daily)</option>
+                    </select>
+                </div>
+                <div class="control-item">
+                    <button class="btn" onclick="queryData()">🔍 Fetch Data</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error" id="errorMessage"></div>
+
+        <!-- Fetch Status -->
+        <div class="fetch-status" id="fetchStatus"></div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 20px; color: var(--accent-cyan); font-size: 18px; font-weight: 600;">
+                Fetching global intelligence data...
+            </p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-card-icon">📊</div>
+                <h3>Total Records</h3>
+                <div class="value" id="totalRecords">-</div>
+                <div class="label">Retrieved from NewsOrbit Data Engine</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon" id="statIcon2">🌍</div>
+                <h3 id="statCard2Title">Countries</h3>
+                <div class="value" id="totalCountries">-</div>
+                <div class="label" id="statCard2Label">Unique countries involved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon" id="statIcon3">📈</div>
+                <h3 id="statCard3Title">Average Tone</h3>
+                <div class="value" id="avgTone">-</div>
+                <div class="label" id="statCard3Label">Goldstein Scale</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon" id="statIcon4">🎭</div>
+                <h3 id="statCard4Title">Event Type</h3>
+                <div class="value" id="topEventType">-</div>
+                <div class="label" id="statCard4Label">Most common category</div>
+            </div>
+        </div>
+
+        <!-- Data Visualizations -->
+        <div class="data-section" id="dataSection" style="display: none;">
+            <h2 id="explorerTitle">📊 Data Analysis - Hierarchical Explorer</h2>
+            
+            <!-- Search and Filter Bar -->
+            <div class="search-filter-bar">
+                <input type="text" id="searchFilter" class="filter-input" placeholder="🔍 Search countries, domains, or actors...">
+                <select id="domainFilter" class="filter-input" style="flex: 0 0 200px;">
+                    <option value="">All Domains</option>
+                    <option value="Politics">Politics</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Economy">Economy</option>
+                    <option value="Health">Health</option>
+                    <option value="Education">Education</option>
+                    <option value="Security">Security</option>
+                    <option value="Diplomacy">Diplomacy</option>
+                    <option value="Environment">Environment</option>
+                    <option value="Society">Society</option>
+                    <option value="Business">Business</option>
+                    <option value="Science">Science</option>
+                    <option value="General">General</option>
+                </select>
+            </div>
+
+            <!-- Breadcrumb Navigation -->
+            <div class="breadcrumb" id="breadcrumb" style="display: none;">
+                <span id="breadcrumbContent"></span>
+            </div>
+
+            <!-- Hierarchical Tree Explorer -->
+            <div class="hierarchical-explorer" id="hierarchicalExplorer">
+                <div style="padding: 40px; text-align: center; color: var(--text-tertiary);">
+                    <p>📂 Query data to explore the hierarchical event structure</p>
+                    <p style="font-size: 0.9em; margin-top: 10px;">Countries → Domains → Events</p>
+                </div>
+            </div>
+
+            <div class="trending-section">
+                <div class="trending-header">
+                    <span class="trending-title-text">🔥 Trending News</span>
+                    <span class="trending-date-badge" id="trendingDateBadge"></span>
+                    <span class="trending-live"></span>
+                </div>
+                <div id="trendingNews">
+                    <div class="trending-placeholder">
+                        <div class="tp-icon">📡</div>
+                        <div>Query data above to see the top 7 most-mentioned news from GDELT</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Detail Modal -->
+        <div class="event-detail-modal" id="eventDetailModal">
+            <div class="event-detail-content">
+                <div class="modal-close" onclick="closeEventDetail()">×</div>
+                <div class="modal-header">
+                    <div class="modal-title" id="modalTitle">Event Details</div>
+                    <div class="modal-meta" id="modalMeta"></div>
+                </div>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>🌍 NewsOrbit</p>
+            <p>Real-time global intelligence monitoring</p>
+        </div>
+    </div>
+        </main>
+
+        <!-- ══ SAVE TO LIBRARY MODAL ══ -->
+        <div class="sil-modal-overlay" id="silSaveOverlay" onclick="closeSaveModal()">
+            <div class="sil-modal" onclick="event.stopPropagation()" style="width:480px;">
+                <div class="sil-modal-header">
+                    <span>⭐ Save News to Library</span>
+                    <button class="sil-modal-close" onclick="closeSaveModal()">×</button>
+                </div>
+                <div class="sil-modal-body">
+                    <!-- Link / URL -->
+                    <div class="sil-form-row">
+                        <label class="sil-form-label">🔗 News Link (URL)</label>
+                        <input class="sil-form-input" id="silUrl" type="url" placeholder="https://...">
+                    </div>
+                    <!-- Title -->
+                    <div class="sil-form-row">
+                        <label class="sil-form-label">📰 News Title</label>
+                        <input class="sil-form-input" id="silTitle" type="text" placeholder="Article or event title">
+                    </div>
+                    <!-- Date saved + Country row -->
+                    <div class="sil-form-two">
+                        <div class="sil-form-row">
+                            <label class="sil-form-label">📅 Date Saved</label>
+                            <input class="sil-form-input" id="silSavedDate" type="text" readonly
+                                style="background:rgba(42,191,130,0.05);color:#2ABF82;font-weight:600;cursor:default;">
+                        </div>
+                        <div class="sil-form-row">
+                            <label class="sil-form-label">🌍 Country</label>
+                            <input class="sil-form-input" id="silCountry" type="text" placeholder="Country name">
+                        </div>
+                    </div>
+                    <!-- Scrollable domain list -->
+                    <div class="sil-form-row">
+                        <label class="sil-form-label">📂 Domain — scroll to pick</label>
+                        <select class="sil-form-select sil-domain-scroll" id="silDomain" size="5">
+                            <option value="Politics">🏙️  Politics</option>
+                            <option value="Economy">💹  Economy</option>
+                            <option value="Finance">🏦  Finance</option>
+                            <option value="Security">🛡️  Security</option>
+                            <option value="Health">🏥  Health</option>
+                            <option value="Technology">🧠  Technology</option>
+                            <option value="Diplomacy">🤝  Diplomacy</option>
+                            <option value="Environment">🌱  Environment</option>
+                            <option value="Military">⚔️  Military</option>
+                            <option value="Science">🔬  Science</option>
+                            <option value="Education">🎓  Education</option>
+                            <option value="Business">💼  Business</option>
+                            <option value="Energy">⚡  Energy</option>
+                            <option value="Society">👥  Society</option>
+                        </select>
+                    </div>
+                    <!-- Tags -->
+                    <div class="sil-form-row">
+                        <label class="sil-form-label">🏷️ Labels <span style="color:var(--text-muted);font-weight:400">(comma-separated, optional)</span></label>
+                        <input class="sil-form-input" id="silTags" type="text" placeholder="e.g. Election, Trade Deal">
+                    </div>
+                </div>
+                <div class="sil-modal-footer" style="justify-content:space-between;align-items:center;">
+                    <button class="sil-btn-cancel" onclick="closeSaveModal()">Cancel</button>
+                    <button class="sil-btn-save" onclick="confirmSave()" style="padding:12px 32px;font-size:1em;">⭐ Save This News</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ SAVED INTELLIGENCE WORKSPACE ══ -->
+        <div id="silWorkspace" style="display:none; position:fixed; top:0; left:264px; right:0; bottom:0; z-index:800; overflow:auto; background:linear-gradient(135deg,#060C18,#0C1628);">
+        <div class="sil-workspace">
+            <div class="sil-ws-header">
+                <div class="sil-ws-title">📚 Saved Intelligence Library</div>
+                <div class="sil-ws-toolbar">
+                    <input class="sil-search" id="silSearch" type="text" placeholder="🔍 Search saved articles..." oninput="renderLibrary()">
+                    <select class="sil-filter-sel" id="silFilterDomain" onchange="renderLibrary()">
+                        <option value="">All Domains</option>
+                        <option>Politics</option><option>Economy</option><option>Finance</option>
+                        <option>Health</option><option>Education</option><option>Technology</option>
+                        <option>Security</option><option>Diplomacy</option><option>Environment</option>
+                        <option>Society</option><option>Science</option><option>Business</option>
+                        <option>Military</option><option>Energy</option>
+                    </select>
+                    <select class="sil-filter-sel" id="silFilterCountry" onchange="renderLibrary()">
+                        <option value="">All Countries</option>
+                    </select>
+                    <select class="sil-filter-sel" id="silFilterSort" onchange="renderLibrary()">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="domain">By Domain</option>
+                        <option value="country">By Country</option>
+                    </select>
+                    <button class="sil-close-ws" onclick="closeLibraryNav()">✕ Close</button>
+                </div>
+            </div>
+            <div class="sil-ws-body">
+                <div class="sil-left-panel">
+                    <div class="sil-panel-title">Domains</div>
+                    <div class="sil-folder active" data-domain="" onclick="silSetFolder(this)">🗂️ All Saved<span class="sil-folder-count" id="silFolderAll">0</span></div>
+                    <div class="sil-folder" data-domain="Politics" onclick="silSetFolder(this)">🏙️ Politics<span class="sil-folder-count" id="silFolderPolitics">0</span></div>
+                    <div class="sil-folder" data-domain="Economy" onclick="silSetFolder(this)">📈 Economy<span class="sil-folder-count" id="silFolderEconomy">0</span></div>
+                    <div class="sil-folder" data-domain="Security" onclick="silSetFolder(this)">🛡️ Security<span class="sil-folder-count" id="silFolderSecurity">0</span></div>
+                    <div class="sil-folder" data-domain="Finance" onclick="silSetFolder(this)">🏦 Finance<span class="sil-folder-count" id="silFolderFinance">0</span></div>
+                    <div class="sil-folder" data-domain="Health" onclick="silSetFolder(this)">🏥 Health<span class="sil-folder-count" id="silFolderHealth">0</span></div>
+                    <div class="sil-folder" data-domain="Technology" onclick="silSetFolder(this)">🧠 Technology<span class="sil-folder-count" id="silFolderTechnology">0</span></div>
+                    <div class="sil-folder" data-domain="Diplomacy" onclick="silSetFolder(this)">🤝 Diplomacy<span class="sil-folder-count" id="silFolderDiplomacy">0</span></div>
+                    <div class="sil-folder" data-domain="Environment" onclick="silSetFolder(this)">🌱 Environment<span class="sil-folder-count" id="silFolderEnvironment">0</span></div>
+                    <div class="sil-folder" data-domain="Military" onclick="silSetFolder(this)">⚔️ Military<span class="sil-folder-count" id="silFolderMilitary">0</span></div>
+                    <div class="sil-folder" data-domain="Science" onclick="silSetFolder(this)">🔬 Science<span class="sil-folder-count" id="silFolderScience">0</span></div>
+                    <div class="sil-folder" data-domain="Education" onclick="silSetFolder(this)">🎓 Education<span class="sil-folder-count" id="silFolderEducation">0</span></div>
+                    <div class="sil-folder" data-domain="Business" onclick="silSetFolder(this)">💼 Business<span class="sil-folder-count" id="silFolderBusiness">0</span></div>
+                    <div class="sil-folder" data-domain="Energy" onclick="silSetFolder(this)">⚡ Energy<span class="sil-folder-count" id="silFolderEnergy">0</span></div>
+                    <div class="sil-folder" data-domain="Society" onclick="silSetFolder(this)">👥 Society<span class="sil-folder-count" id="silFolderSociety">0</span></div>
+                </div>
+                <div class="sil-center-panel">
+                    <div id="silCardList"><div class="sil-empty">💬 No saved articles yet.<br><span style="font-size:0.85em;color:var(--text-muted)">Open any event and click ⭐ Save to Intelligence Library</span></div></div>
+                </div>
+                <div class="sil-right-panel" id="silDetail">
+                    <div class="sil-detail-placeholder">📌<br><span>Select an article<br>to view details</span></div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    </div><!-- /.app-layout -->
+
+    <script>
+        // Check server health on page load
+        async function checkServerHealth() {
+            try {
+                const response = await fetch('/api/schema/events');
+                if (response.ok) {
+                    console.log('Server is healthy');
+                    return true;
+                }
+            } catch (error) {
+                console.error('Server health check failed:', error);
+                document.getElementById('errorMessage').textContent = 
+                    '⚠️ Server is not responding. Make sure Flask is running: python app.py';
+                document.getElementById('errorMessage').classList.add('active');
+            }
+            return false;
+        }
+
+        // Sync calendar picker with text input
+        function formatDateToGDELT(dateObj) {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${dateObj.getFullYear()} ${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
+        }
+
+        function formatDateToISO(dateObj) {
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Initialize calendar picker with default date
+        document.addEventListener('DOMContentLoaded', function() {
+            // Custom calendar is already initialised via calInit() called at script end
+        });
+
+        // Convert date from calendar picker to GDELT format
+        function formatCalendarDateToGDELT(isoDateString) {
+            const date = new Date(isoDateString + 'T00:00:00');
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${date.getFullYear()} ${months[date.getMonth()]} ${date.getDate()}`;
+        }
+
+        async function queryData() {
+            const calendarValue = document.getElementById('calendarPicker').value;
+            const date = formatCalendarDateToGDELT(calendarValue);
+            const table = document.getElementById('tableSelect').value;
+            const version = parseInt(document.getElementById('versionSelect').value);
+
+            // Show loading
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('errorMessage').classList.remove('active');
+            document.getElementById('dataSection').style.display = 'none';
+
+            try {
+                console.log('Sending query:', { date, table, version });
+                
+                const response = await fetch('/api/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ date, table, version })
+                });
+
+                console.log('Response status:', response.status);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    
+                    // Show helpful error message
+                    let errorMsg = errorData.message || errorData.error || 'Failed to fetch data';
+                    
+                    if (errorData.note) {
+                        errorMsg += `<br><br><em>${errorData.note}</em>`;
+                    }
+                    
+                    document.getElementById('errorMessage').innerHTML = '❌ ' + errorMsg;
+                    document.getElementById('errorMessage').classList.add('active');
+                    document.getElementById('loading').classList.remove('active');
+                    return;
+                }
+
+                const data = await response.json();
+                console.log('Data received:', data);
+                
+                // Show success status with timestamp and metadata
+                const now = new Date();
+                let statusText = `✅ <strong>Live data fetched successfully!</strong> Retrieved at: ${now.toLocaleString()}`;
+                if (data.metadata) {
+                    statusText += `<br>📡 Source: ${data.metadata.source} | 📅 Query Date: ${data.metadata.query_date} | 📊 Table: ${data.metadata.table}`;
+                }
+                document.getElementById('fetchStatus').innerHTML = statusText;
+                document.getElementById('fetchStatus').classList.add('active');
+                
+                displayData(data, table);
+            } catch (error) {
+                console.error('Query error:', error);
+                let errorMsg = error.message;
+                if (error.message.includes('Failed to fetch')) {
+                    errorMsg = 'Cannot connect to server. Please ensure Flask is running: python app.py';
+                }
+                document.getElementById('errorMessage').innerHTML = '❌ Error: ' + errorMsg;
+                document.getElementById('errorMessage').classList.add('active');
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+            }
+        }
+
+        // Store current data globally for filtering
+        let currentData = null;
+        let currentTable = null;
+
+        function displayData(data, table) {
+            // Defensive check for data structure
+            if (!data || !data.stats) {
+                console.error('Invalid data structure:', data);
+                document.getElementById('errorMessage').textContent = '❌ Error: Invalid response from server';
+                document.getElementById('errorMessage').classList.add('active');
+                return;
+            }
+            
+            // Store data globally
+            currentData = data;
+            currentTable = table;
+            
+            // Update stats
+            document.getElementById('totalRecords').textContent = data.total_records.toLocaleString();
+            updateSidebarStats(data, table);
+            
+            // Handle different table types
+            if (table === 'events') {
+                document.getElementById('statIcon2').textContent = '🌍';
+                document.getElementById('statCard2Title').textContent = 'Countries';
+                document.getElementById('statCard2Label').textContent = 'Unique countries involved';
+                document.getElementById('statIcon3').textContent = '📈';
+                document.getElementById('statCard3Title').textContent = 'Average Tone';
+                document.getElementById('statCard3Label').textContent = 'Goldstein Scale';
+                document.getElementById('statIcon4').textContent = '🎭';
+                document.getElementById('statCard4Title').textContent = 'Event Type';
+                document.getElementById('statCard4Label').textContent = 'Most common category';
+
+                if (data.stats.top_countries) {
+                    const countries = Object.keys(data.stats.top_countries).length;
+                    document.getElementById('totalCountries').textContent = countries;
+                } else {
+                    document.getElementById('totalCountries').textContent = '-';
+                }
+                
+                if (data.stats.goldstein_avg !== undefined) {
+                    document.getElementById('avgTone').textContent = data.stats.goldstein_avg.toFixed(2);
+                } else {
+                    document.getElementById('avgTone').textContent = '-';
+                }
+                
+                if (data.stats.event_categories) {
+                    const topCategory = Object.keys(data.stats.event_categories)[0];
+                    document.getElementById('topEventType').textContent = topCategory ? topCategory.slice(0, 15) : '-';
+                } else {
+                    document.getElementById('topEventType').textContent = '-';
+                }
+            } else if (table === 'gkg') {
+                document.getElementById('statIcon2').textContent = '📍';
+                document.getElementById('statCard2Title').textContent = 'With Location';
+                document.getElementById('statCard2Label').textContent = 'Articles with geo data';
+                document.getElementById('statIcon3').textContent = '🎵';
+                document.getElementById('statCard3Title').textContent = 'Avg Tone';
+                document.getElementById('statCard3Label').textContent = 'Mean document tone';
+                document.getElementById('statIcon4').textContent = '📰';
+                document.getElementById('statCard4Title').textContent = 'Top Source';
+                document.getElementById('statCard4Label').textContent = 'Most cited news outlet';
+
+                document.getElementById('totalCountries').textContent = (data.stats && data.stats.with_locations) || '-';
+                document.getElementById('avgTone').textContent = data.stats && data.stats.avg_tone !== undefined ? data.stats.avg_tone.toFixed(2) : '-';
+                const topSrc = data.stats && data.stats.top_sources ? Object.keys(data.stats.top_sources)[0] : null;
+                document.getElementById('topEventType').textContent = topSrc ? topSrc.slice(0, 14) : 'GKG';
+            } else if (table === 'mentions') {
+                document.getElementById('statIcon2').textContent = '🔗';
+                document.getElementById('statCard2Title').textContent = 'Unique Events';
+                document.getElementById('statCard2Label').textContent = 'Events with mentions';
+                document.getElementById('statIcon3').textContent = '🎯';
+                document.getElementById('statCard3Title').textContent = 'Avg Confidence';
+                document.getElementById('statCard3Label').textContent = 'Source confidence score';
+                document.getElementById('statIcon4').textContent = '🎵';
+                document.getElementById('statCard4Title').textContent = 'Avg Doc Tone';
+                document.getElementById('statCard4Label').textContent = 'Mean document sentiment';
+
+                document.getElementById('totalCountries').textContent = (data.stats && data.stats.unique_events) || '-';
+                document.getElementById('avgTone').textContent = data.stats && data.stats.avg_confidence !== undefined ? data.stats.avg_confidence.toFixed(1) : '-';
+                document.getElementById('topEventType').textContent = data.stats && data.stats.avg_doc_tone !== undefined ? data.stats.avg_doc_tone.toFixed(2) : '-';
+            }
+
+            // Show data section
+            document.getElementById('dataSection').style.display = 'block';
+
+            // Render explorer — different view per table
+            if (table === 'events' && data.stats.hierarchical_data) {
+                if (document.getElementById('explorerTitle')) document.getElementById('explorerTitle').textContent = '📊 Data Analysis — Hierarchical Explorer';
+                renderHierarchicalExplorer(data.stats.hierarchical_data);
+            } else if (table === 'gkg') {
+                if (document.getElementById('explorerTitle')) document.getElementById('explorerTitle').textContent = '📰 News Knowledge Graph — Article Explorer';
+                renderGKGExplorer(data.stats);
+            } else if (table === 'mentions') {
+                if (document.getElementById('explorerTitle')) document.getElementById('explorerTitle').textContent = '🔔 Mentions — Event Coverage Tracker';
+                renderMentionsExplorer(data.stats);
+            } else {
+                document.getElementById('hierarchicalExplorer').innerHTML = `
+                    <div style="padding: 40px; text-align: center; color: var(--text-tertiary);">
+                        <p>📂 No structured view available for this data type</p>
+                    </div>
+                `;
+            }
+
+            // Render trending news
+            renderTrendingNews(data, table);
+        }
+
+        function escHtml(s) {
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function renderTrendingNews(data, table) {
+            const container = document.getElementById('trendingNews');
+            const dateBadge = document.getElementById('trendingDateBadge');
+            const calLabel  = document.getElementById('calTriggerText');
+            if (dateBadge && calLabel) dateBadge.textContent = calLabel.textContent;
+
+            const items = (data.trending_news || []).filter(n => n.url && n.url.startsWith('http'));
+            if (!items.length) {
+                container.innerHTML = '<div class="trending-placeholder"><div class="tp-icon">📰</div><div>No sourced articles found for this dataset. Try the Events table for best results.</div></div>';
+                return;
+            }
+
+            const rankSymbols = ['🥇','🥈','🥉','4','5','6','7'];
+            const rankColors  = ['#FFD700','#C0C0C0','#CD7F32','#2ABF82','#2ABF82','#5BA3F5','#5BA3F5'];
+
+            container.innerHTML = items.map((item, i) => {
+                const tone = item.goldstein;
+                const toneClass = tone > 1 ? 'tone-pos' : tone < -2 ? 'tone-neg' : 'tone-neu';
+                const toneLabel = tone > 0 ? `+${tone}` : `${tone}`;
+                return `
+                <a class="trend-card" href="${escHtml(item.url)}" target="_blank" rel="noopener noreferrer">
+                    <div class="trend-rank" style="color:${rankColors[i]}">${rankSymbols[i]}</div>
+                    <div class="trend-body">
+                        <div class="trend-title">${escHtml(item.quad_icon)} ${escHtml(item.title)}</div>
+                        <div class="trend-meta">
+                            ${item.source  ? `<span class="trend-badge trend-source-badge">📰 ${escHtml(item.source)}</span>` : ''}
+                            ${item.domain  ? `<span class="trend-badge trend-domain-badge">${escHtml(item.domain)}</span>` : ''}
+                            ${item.country ? `<span class="trend-badge trend-country-badge">🌍 ${escHtml(item.country)}</span>` : ''}
+                            ${item.mentions > 0 ? `<span class="trend-badge trend-stat-badge">📡 ${item.mentions} mentions</span>` : ''}
+                            <span class="trend-badge ${toneClass}">${toneLabel}</span>
+                        </div>
+                    </div>
+                    <div class="trend-arrow">↗</div>
+                </a>`;
+            }).join('');
+        }
+
+        function renderHierarchicalExplorer(hierarchicalData) {
+            const container = document.getElementById('hierarchicalExplorer');
+            
+            if (!hierarchicalData || Object.keys(hierarchicalData).length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 40px; text-align: center; color: var(--text-tertiary);">
+                        <p>📂 No hierarchical data available</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Get filter values
+            const searchTerm = document.getElementById('searchFilter').value.toLowerCase();
+            const domainFilter = document.getElementById('domainFilter').value;
+
+            // Filter countries or limit display
+            let countries = Object.entries(hierarchicalData);
+            
+            // Apply search filter
+            if (searchTerm) {
+                countries = countries.filter(([country, data]) => 
+                    country.toLowerCase().includes(searchTerm) || 
+                    Object.keys(data.domains).some(domain => domain.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            // Apply domain filter
+            if (domainFilter) {
+                countries = countries.filter(([country, data]) => 
+                    data.domains[domainFilter] !== undefined
+                );
+            }
+
+            // Remove any Unknown entries
+            countries = countries.filter(([code]) => code !== 'Unknown' && code !== '');
+
+            // Sort descending by event count
+            countries.sort((a, b) => b[1].total_events - a[1].total_events);
+
+            // India always first — pull it out, put it at position 0
+            const TOP_N = 20;
+            const indiaIdx = countries.findIndex(([code]) => code === 'IND');
+            let indiaEntry = null;
+            if (indiaIdx !== -1) {
+                indiaEntry = countries.splice(indiaIdx, 1)[0];
+            }
+            let topCountries = countries.slice(0, indiaEntry ? TOP_N - 1 : TOP_N);
+            if (indiaEntry) topCountries.unshift(indiaEntry); // India at position 0
+            countries = topCountries;
+            
+            const html = countries.map(([countryCode, countryData]) => {
+                const countryId = `country-${countryCode}`;
+                const domainsHtml = Object.entries(countryData.domains)
+                    .filter(([domain]) => !domainFilter || domain === domainFilter)
+                    .map(([domainName, domainData]) => {
+                        const domainId = `domain-${countryCode}-${domainName}`;
+                        const toneClass = domainData.avg_tone > 0 ? 'positive' : domainData.avg_tone < 0 ? 'negative' : '';
+                        
+                        const eventsHtml = domainData.events.map((event, idx) => {
+                            const eventId = `event-${countryCode}-${domainName}-${idx}`;
+                            const scoreClass = event.goldstein > 0 ? 'positive' : event.goldstein < 0 ? ' negative' : 'neutral';
+                            const quadClass = ['', 'Verbal Coop', 'Material Coop', 'Verbal Conflict', 'Material Conflict'][event.quad_class] || 'Unknown';
+                            
+                            return `
+                                <div class="event-node" onclick="showEventDetail(${JSON.stringify(event).replace(/"/g, '&quot;')},'${countryCode}', '${domainName}')">
+                                    <div class="event-node-content">
+                                        <div class="event-date">${event.date}</div>
+                                        <div class="event-actors">
+                                            <span class="event-actor-name">${event.actor1}</span> → 
+                                            <span class="event-actor-name">${event.actor2}</span>
+                                            <span style="color: var(--text-muted); font-size: 0.85em; margin-left: 8px;">${quadClass}</span>
+                                        </div>
+                                        <div class="event-score ${scoreClass}">${event.goldstein.toFixed(1)}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                        
+                        return `
+                            <div class="tree-node domain-node">
+                                <div class="node-header" onclick="toggleNode('${domainId}', event)">
+                                    <div class="expand-icon" id="${domainId}-icon">▶</div>
+                                    <div class="node-icon">${getDomainIcon(domainName)}</div>
+                                    <div class="node-content">
+                                        <div class="node-title">${domainName}</div>
+                                        <div class="node-count">${domainData.count}</div>
+                                        <div class="node-tone ${toneClass}">Tone: ${domainData.avg_tone.toFixed(1)}</div>
+                                    </div>
+                                </div>
+                                <div class="node-children" id="${domainId}-children">
+                                    ${eventsHtml}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                
+                return `
+                    <div class="tree-node">
+                        <div class="node-header" onclick="toggleNode('${countryId}', event)">
+                            <div class="expand-icon" id="${countryId}-icon">▶</div>
+                            <div class="node-icon">🌍</div>
+                            <div class="node-content">
+                                <div class="node-title">${getCountryName(countryCode)}</div>
+                                <div class="node-count">${countryData.total_events}</div>
+                                <div class="node-badge">Dominant: ${countryData.dominant_domain}</div>
+                            </div>
+                        </div>
+                        <div class="node-children" id="${countryId}-children">
+                            ${domainsHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html || '<div style="padding: 40px; text-align: center; color: var(--text-tertiary);"><p>No matching data found</p></div>';
+        }
+
+        function toggleNode(nodeId, event) {
+            event.stopPropagation();
+            const children = document.getElementById(`${nodeId}-children`);
+            const icon = document.getElementById(`${nodeId}-icon`);
+            const header = event.currentTarget;
+            
+            if (children.classList.contains('expanded')) {
+                children.classList.remove('expanded');
+                icon.classList.remove('expanded');
+                header.classList.remove('active');
+            } else {
+                children.classList.add('expanded');
+                icon.classList.add('expanded');
+                header.classList.add('active');
+            }
+        }
+
+        function getDomainIcon(domain) {
+            const icons = {
+                'Politics': '🏛️',
+                'Finance': '💰',
+                'Economy': '📈',
+                'Health': '🏥',
+                'Education': '🎓',
+                'Security': '🛡️',
+                'Diplomacy': '🤝',
+                'Environment': '🌿',
+                'Society': '👥',
+                'Business': '💼',
+                'Science': '🔬',
+                'General': '📋'
+            };
+            return icons[domain] || '📌';
+        }
+
+        const COUNTRY_NAMES = {
+            'ABW':'Aruba','AFG':'Afghanistan','AFR':'Africa (Region)','AGO':'Angola',
+            'ALB':'Albania','AND':'Andorra','ANT':'Netherlands Antilles','ARE':'United Arab Emirates',
+            'ARG':'Argentina','ARM':'Armenia','ASA':'Asia (Region)','ATG':'Antigua and Barbuda',
+            'AUS':'Australia','AUT':'Austria','AZE':'Azerbaijan','BDI':'Burundi',
+            'BEL':'Belgium','BEN':'Benin','BFA':'Burkina Faso','BGD':'Bangladesh',
+            'BGR':'Bulgaria','BHR':'Bahrain','BHS':'Bahamas','BIH':'Bosnia and Herzegovina',
+            'BLR':'Belarus','BLZ':'Belize','BMU':'Bermuda','BOL':'Bolivia',
+            'BRA':'Brazil','BRB':'Barbados','BRN':'Brunei','BTN':'Bhutan',
+            'BWA':'Botswana','CAF':'Central African Republic','CAN':'Canada','CHE':'Switzerland',
+            'CHL':'Chile','CHN':'China','CIV':'Ivory Coast','CMR':'Cameroon',
+            'COD':'DR Congo','COG':'Republic of Congo','COL':'Colombia','COM':'Comoros',
+            'CPV':'Cape Verde','CRI':'Costa Rica','CUB':'Cuba','CYP':'Cyprus',
+            'CZE':'Czech Republic','DEU':'Germany','DJI':'Djibouti','DNK':'Denmark',
+            'DOM':'Dominican Republic','DZA':'Algeria','ECU':'Ecuador','EGY':'Egypt',
+            'ERI':'Eritrea','ESP':'Spain','EST':'Estonia','ETH':'Ethiopia',
+            'EUR':'Europe (Region)','FIN':'Finland','FJI':'Fiji','FRA':'France',
+            'FSM':'Micronesia','GAB':'Gabon','GBR':'United Kingdom','GEO':'Georgia',
+            'GHA':'Ghana','GIN':'Guinea','GMB':'Gambia','GNB':'Guinea-Bissau',
+            'GNQ':'Equatorial Guinea','GRC':'Greece','GTM':'Guatemala','GUY':'Guyana',
+            'HND':'Honduras','HRV':'Croatia','HTI':'Haiti','HUN':'Hungary',
+            'IDN':'Indonesia','IND':'India','IRL':'Ireland','IRN':'Iran',
+            'IRQ':'Iraq','ISL':'Iceland','ISR':'Israel','ITA':'Italy',
+            'JAM':'Jamaica','JOR':'Jordan','JPN':'Japan','KAZ':'Kazakhstan',
+            'KEN':'Kenya','KGZ':'Kyrgyzstan','KHM':'Cambodia','KIR':'Kiribati',
+            'KOR':'South Korea','KWT':'Kuwait','LAO':'Laos','LBN':'Lebanon',
+            'LBR':'Liberia','LBY':'Libya','LCA':'Saint Lucia','LIE':'Liechtenstein',
+            'LKA':'Sri Lanka','LSO':'Lesotho','LTU':'Lithuania','LUX':'Luxembourg',
+            'LVA':'Latvia','MAR':'Morocco','MDA':'Moldova','MDG':'Madagascar',
+            'MDV':'Maldives','MEX':'Mexico','MKD':'North Macedonia','MLI':'Mali',
+            'MLT':'Malta','MMR':'Myanmar','MNE':'Montenegro','MNG':'Mongolia',
+            'MOZ':'Mozambique','MRT':'Mauritania','MUS':'Mauritius','MWI':'Malawi',
+            'MYS':'Malaysia','NAM':'Namibia','NER':'Niger','NGA':'Nigeria',
+            'NIC':'Nicaragua','NLD':'Netherlands','NOR':'Norway','NPL':'Nepal',
+            'NZL':'New Zealand','OMN':'Oman','PAK':'Pakistan','PAN':'Panama',
+            'PER':'Peru','PHL':'Philippines','PLW':'Palau','PNG':'Papua New Guinea',
+            'POL':'Poland','PRK':'North Korea','PRT':'Portugal','PRY':'Paraguay',
+            'PSE':'Palestine','QAT':'Qatar','ROU':'Romania','RUS':'Russia',
+            'RWA':'Rwanda','SAU':'Saudi Arabia','SDN':'Sudan','SEN':'Senegal',
+            'SGP':'Singapore','SLB':'Solomon Islands','SLE':'Sierra Leone','SLV':'El Salvador',
+            'SMR':'San Marino','SOM':'Somalia','SRB':'Serbia','SSD':'South Sudan',
+            'STP':'São Tomé and Príncipe','SUR':'Suriname','SVK':'Slovakia','SVN':'Slovenia',
+            'SWE':'Sweden','SWZ':'Eswatini','SYC':'Seychelles','SYR':'Syria',
+            'TCD':'Chad','TGO':'Togo','THA':'Thailand','TJK':'Tajikistan',
+            'TKM':'Turkmenistan','TLS':'Timor-Leste','TON':'Tonga','TTO':'Trinidad and Tobago',
+            'TUN':'Tunisia','TUR':'Turkey','TWN':'Taiwan','TZA':'Tanzania',
+            'UGA':'Uganda','UKR':'Ukraine','URY':'Uruguay','USA':'United States',
+            'UZB':'Uzbekistan','VAT':'Vatican City','VCT':'Saint Vincent','VEN':'Venezuela',
+            'VNM':'Vietnam','VUT':'Vanuatu','WSM':'Samoa','YEM':'Yemen',
+            'ZAF':'South Africa','ZMB':'Zambia','ZWE':'Zimbabwe',
+            'Unknown':'Unknown'
+        };
+
+        function getCountryName(code) {
+            return COUNTRY_NAMES[code] || code;
+        }
+
+        function showEventDetail(event, country, domain) {
+            const modal = document.getElementById('eventDetailModal');
+            document.getElementById('modalTitle').textContent = 'Event Details';
+            document.getElementById('modalMeta').textContent = `${country} › ${domain} › ${event.date}`;
+            
+            const quadMap = ['', 'Verbal Cooperation', 'Material Cooperation', 'Verbal Conflict', 'Material Conflict'];
+            const quadClass = quadMap[event.quad_class] || 'Unknown';
+            const scoreClass = event.goldstein > 0 ? 'positive' : event.goldstein < 0 ? 'negative' : 'neutral';
+            
+            document.getElementById('modalBody').innerHTML = `
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Date</div>
+                        <div class="detail-value">${event.date}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Event Code</div>
+                        <div class="detail-value large">${event.event_code}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Goldstein Scale</div>
+                        <div class="detail-value large ${scoreClass}">${event.goldstein.toFixed(2)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Event Category</div>
+                        <div class="detail-value">${quadClass}</div>
+                    </div>
+                </div>
+                <div class="detail-grid" style="margin-top: 20px;">
+                    <div class="detail-item">
+                        <div class="detail-label">Actor 1</div>
+                        <div class="detail-value">${event.actor1}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Actor 2</div>
+                        <div class="detail-value">${event.actor2}</div>
+                    </div>
+                </div>
+                <div class="detail-grid" style="margin-top: 20px;">
+                    <div class="detail-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value">${getCountryName(country)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Domain</div>
+                        <div class="detail-value">${domain}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Mentions</div>
+                        <div class="detail-value">${event.num_mentions || 0}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Sources</div>
+                        <div class="detail-value">${event.num_sources || 0}</div>
+                    </div>
+                </div>
+                ${event.source_url ? `
+                <div class="detail-item" style="margin-top: 20px;">
+                    <div class="detail-label">Source URL</div>
+                    <div class="detail-value" style="word-break: break-all; font-size: 0.85em;">
+                        <a href="${event.source_url}" target="_blank" style="color: var(--accent-cyan);">${event.source_url}</a>
+                    </div>
+                </div>
+                ` : ''}
+                ${event.avg_tone ? `
+                <div class="detail-item" style="margin-top: 20px;">
+                    <div class="detail-label">Average Tone</div>
+                    <div class="detail-value">${event.avg_tone.toFixed(2)}</div>
+                </div>
+                ` : ''}
+            `;
+            
+            // Add Save to Library button at bottom
+            document.getElementById('modalBody').insertAdjacentHTML('beforeend', `
+                <div style="margin-top:28px;padding-top:18px;border-top:1px solid rgba(42,191,130,0.12);">
+                    <button class="sil-save-trigger" onclick="openSaveModal(${JSON.stringify(event).replace(/"/g,'&quot;')}, '${country}', '${domain}')">
+                        ⭐ Save to Intelligence Library
+                    </button>
+                </div>
+            `);
+            modal.classList.add('active');
+        }
+
+        function closeEventDetail() {
+            document.getElementById('eventDetailModal').classList.remove('active');
+        }
+
+        // Add filter event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('searchFilter').addEventListener('input', function() {
+                if (currentData && currentTable === 'events' && currentData.stats.hierarchical_data) {
+                    renderHierarchicalExplorer(currentData.stats.hierarchical_data);
+                }
+            });
+            
+            document.getElementById('domainFilter').addEventListener('change', function() {
+                if (currentData && currentTable === 'events' && currentData.stats.hierarchical_data) {
+                    renderHierarchicalExplorer(currentData.stats.hierarchical_data);
+                }
+            });
+
+            // Close modal on outside click
+            document.getElementById('eventDetailModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeEventDetail();
+                }
+            });
+        });
+
+        // Search news for clicked items
+        function searchNews(term, type) {
+            const calendarValue = document.getElementById('calendarPicker').value;
+            const date = formatCalendarDateToGDELT(calendarValue);
+            let searchQuery = '';
+            
+            if (type === 'country') {
+                searchQuery = `${term} news ${date}`;
+            } else if (type === 'actor') {
+                searchQuery = `${term} ${date}`;
+            } else if (type === 'category') {
+                searchQuery = `${term} events ${date}`;
+            }
+            
+            // Open Google News search in new tab
+            const googleNewsUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}&tbm=nws`;
+            window.open(googleNewsUrl, '_blank');
+        }
+
+        function renderGKGExplorer(stats) {
+            const container = document.getElementById('hierarchicalExplorer');
+            const articles = stats.articles || [];
+            if (!articles.length) {
+                container.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text-tertiary);"><p>📰 No articles to display</p></div>`;
+                return;
+            }
+            const topSources  = stats.top_sources       ? Object.entries(stats.top_sources).slice(0, 6)  : [];
+            const topThemes   = stats.top_themes        ? Object.entries(stats.top_themes).slice(0, 10) : [];
+            const topPersons  = stats.top_persons       ? Object.entries(stats.top_persons).slice(0, 5)  : [];
+            const summaryHtml = `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;padding:16px 16px 8px;">
+                    ${topSources.length ? `<div style="background:rgba(12,22,40,0.8);border:1px solid rgba(42,191,130,0.15);border-radius:12px;padding:14px;">
+                        <div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Top Sources</div>
+                        ${topSources.map(([s,c]) => `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.82em;"><span style="color:var(--text-secondary);">${s.slice(0,30)}</span><span style="color:#3ED19A;font-weight:700;font-family:'JetBrains Mono',monospace;">${c}</span></div>`).join('')}
+                    </div>` : ''}
+                    ${topThemes.length ? `<div style="background:rgba(12,22,40,0.8);border:1px solid rgba(42,191,130,0.15);border-radius:12px;padding:14px;">
+                        <div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Top Themes</div>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;">${topThemes.map(([t,c]) => `<span style="background:rgba(42,191,130,0.10);border:1px solid rgba(42,191,130,0.22);color:#2ABF82;font-size:0.68em;font-weight:600;padding:3px 8px;border-radius:6px;">${t.slice(0,22)} <span style="color:#3ED19A;">${c}</span></span>`).join('')}</div>
+                    </div>` : ''}
+                    ${topPersons.length ? `<div style="background:rgba(12,22,40,0.8);border:1px solid rgba(58,138,232,0.15);border-radius:12px;padding:14px;">
+                        <div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Key Persons</div>
+                        ${topPersons.map(([p,c]) => `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.82em;"><span style="color:#5BA3F5;font-weight:600;">${p.slice(0,28)}</span><span style="color:#3ED19A;font-weight:700;font-family:'JetBrains Mono',monospace;">${c}</span></div>`).join('')}
+                    </div>` : ''}
+                </div>`;
+            const cardsHtml = articles.map(a => {
+                const toneStyle = a.tone === null ? '' : a.tone > 0 ? 'color:#24A870' : a.tone < 0 ? 'color:#E05050' : 'color:#6E90AA';
+                const toneStr  = a.tone !== null ? a.tone.toFixed(1) : '—';
+                const pills     = (a.themes||[]).map(t => `<span style="background:rgba(42,191,130,0.09);border:1px solid rgba(42,191,130,0.18);color:#3ED19A;font-size:0.65em;font-weight:600;padding:2px 7px;border-radius:6px;">${t.slice(0,20)}</span>`).join('');
+                const persons   = (a.persons||[]).join(', ');
+                const urlDisp   = a.url ? a.url.replace(/^https?:\/\//, '').slice(0, 60) : '';
+                return `<div style="border-bottom:1px solid rgba(42,191,130,0.07);padding:13px 16px;transition:background 0.18s;" onmouseover="this.style.background='rgba(42,191,130,0.04)'" onmouseout="this.style.background=''">
+                    <div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+                        <div style="flex:1;min-width:0;">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap;">
+                                <span style="font-weight:700;color:#5BA3F5;font-size:0.88em;">${a.source||'Unknown'}</span>
+                                <span style="font-size:0.70em;color:var(--text-muted);font-family:'JetBrains Mono',monospace;">${a.date}</span>
+                                <span style="font-weight:700;font-size:0.80em;${toneStyle}">Tone: ${toneStr}</span>
+                            </div>
+                            ${pills ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:5px;">${pills}</div>` : ''}
+                            ${persons ? `<div style="font-size:0.76em;color:var(--text-tertiary);">👤 ${persons}</div>` : ''}
+                            ${urlDisp ? `<div style="font-size:0.70em;color:var(--text-muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${urlDisp}</div>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            container.innerHTML = `<div>${summaryHtml}<div>${cardsHtml}</div></div>`;
+        }
+
+        function renderMentionsExplorer(stats) {
+            const container = document.getElementById('hierarchicalExplorer');
+            const events    = stats.top_mentioned_events || [];
+            if (!events.length) {
+                container.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text-tertiary);"><p>🔔 No mentions data to display</p></div>`;
+                return;
+            }
+            const mentionTypes = stats.mention_types       ? Object.entries(stats.mention_types)                   : [];
+            const topSources   = stats.top_mention_sources ? Object.entries(stats.top_mention_sources).slice(0, 6) : [];
+            const summaryHtml = `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;padding:16px 16px 8px;">
+                    <div style="background:rgba(12,22,40,0.8);border:1px solid rgba(42,191,130,0.15);border-radius:12px;padding:14px;">
+                        <div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Overview</div>
+                        ${[
+                            ['Unique Events',       stats.unique_events ?? '—'],
+                            ['Avg Mentions/Event',  stats.avg_mentions_per_event ? stats.avg_mentions_per_event.toFixed(1) : '—'],
+                            ['Avg Confidence',      stats.avg_confidence ?? '—'],
+                            ['Avg Doc Tone',        stats.avg_doc_tone !== undefined ? stats.avg_doc_tone.toFixed(2) : '—']
+                        ].map(([lbl,val]) => `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.82em;"><span style="color:var(--text-secondary);">${lbl}</span><span style="color:#3ED19A;font-weight:700;font-family:'JetBrains Mono',monospace;">${val}</span></div>`).join('')}
+                    </div>
+                    ${mentionTypes.length ? `<div style="background:rgba(12,22,40,0.8);border:1px solid rgba(42,191,130,0.15);border-radius:12px;padding:14px;">
+                        <div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Mention Types</div>
+                        ${mentionTypes.map(([t,c]) => `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.82em;"><span style="color:var(--text-secondary);">${t}</span><span style="color:#3ED19A;font-weight:700;font-family:'JetBrains Mono',monospace;">${c}</span></div>`).join('')}
+                    </div>` : ''}
+                    ${topSources.length ? `<div style="background:rgba(12,22,40,0.8);border:1px solid rgba(58,138,232,0.15);border-radius:12px;padding:14px;">
+                        <div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Top Sources</div>
+                        ${topSources.map(([s,c]) => `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.82em;"><span style="color:#5BA3F5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px;">${s}</span><span style="color:#3ED19A;font-weight:700;font-family:'JetBrains Mono',monospace;flex-shrink:0;margin-left:6px;">${c}</span></div>`).join('')}
+                    </div>` : ''}
+                </div>`;
+            const tableHtml = `
+                <div style="padding:0 16px 16px;">
+                    <div style="font-size:0.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Top Mentioned Events</div>
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%;border-collapse:collapse;font-size:0.84em;">
+                            <thead><tr style="background:rgba(42,191,130,0.09);">
+                                ${['Event ID','Mentions','Sources','Confidence','Avg Tone','First Mention']
+                                    .map(h => `<th style="padding:9px 12px;text-align:left;color:#2ABF82;font-weight:700;border-bottom:1px solid rgba(42,191,130,0.18);white-space:nowrap;">${h}</th>`).join('')}
+                            </tr></thead>
+                            <tbody>${events.map(ev => {
+                                const toneStyle = ev.avg_tone > 0 ? 'color:#24A870' : ev.avg_tone < 0 ? 'color:#E05050' : 'color:#6E90AA';
+                                const srcStr    = (ev.sources||[]).slice(0,2).join(', ');
+                                return `<tr style="border-bottom:1px solid rgba(255,255,255,0.04);" onmouseover="this.style.background='rgba(42,191,130,0.05)'" onmouseout="this.style.background=''">
+                                    <td style="padding:8px 12px;color:#5BA3F5;font-family:'JetBrains Mono',monospace;font-weight:600;">${ev.event_id}</td>
+                                    <td style="padding:8px 12px;"><span style="background:rgba(42,191,130,0.12);color:#2ABF82;font-weight:700;padding:2px 9px;border-radius:7px;font-family:'JetBrains Mono',monospace;">${ev.mention_count}</span></td>
+                                    <td style="padding:8px 12px;color:var(--text-secondary);font-size:0.88em;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${srcStr||'—'}</td>
+                                    <td style="padding:8px 12px;text-align:center;color:#3ED19A;font-family:'JetBrains Mono',monospace;">${ev.avg_confidence ?? '—'}</td>
+                                    <td style="padding:8px 12px;text-align:center;font-family:'JetBrains Mono',monospace;font-weight:600;${toneStyle}">${ev.avg_tone !== undefined ? ev.avg_tone.toFixed(2) : '—'}</td>
+                                    <td style="padding:8px 12px;color:var(--text-muted);font-size:0.78em;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${ev.first_mention ? String(ev.first_mention).slice(0,14) : '—'}</td>
+                                </tr>`;
+                            }).join('')}</tbody>
+                        </table>
+                    </div>
+                </div>`;
+            container.innerHTML = summaryHtml + tableHtml;
+        }
+
+        function setActiveNav(el) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
+            el.classList.add('nav-active');
+            // Close any open overlay so the selected section is visible immediately
+            document.getElementById('silWorkspace').style.display = 'none';
+            const aiDrawer = document.getElementById('aiDrawer');
+            aiDrawer.style.display = 'none';
+            aiDrawer.classList.remove('ai-open');
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function updateSidebarStats(data, table) {
+            const sbRecords    = document.getElementById('sbRecords');
+            const sbCountries  = document.getElementById('sbCountries');
+            const sbTone       = document.getElementById('sbTone');
+            const sbEventCount = document.getElementById('sbEventCount');
+
+            if (sbRecords) sbRecords.textContent = data.total_records ? data.total_records.toLocaleString() : '\u2014';
+
+            if (table === 'events') {
+                const cCount = data.stats && data.stats.top_countries ? Object.keys(data.stats.top_countries).length : '\u2014';
+                if (sbCountries) sbCountries.textContent = cCount;
+                if (sbTone) sbTone.textContent = data.stats && data.stats.goldstein_avg !== undefined ? data.stats.goldstein_avg.toFixed(1) : '\u2014';
+                const n = data.total_records || 0;
+                if (sbEventCount) {
+                    sbEventCount.textContent = n > 9999 ? (n / 1000).toFixed(1) + 'k' : n;
+                    sbEventCount.style.display = '';
+                }
+            } else if (table === 'gkg') {
+                if (sbCountries) sbCountries.textContent = data.stats && data.stats.with_locations ? data.stats.with_locations : '\u2014';
+                if (sbTone) sbTone.textContent = data.stats && data.stats.avg_tone !== undefined ? data.stats.avg_tone.toFixed(1) : '\u2014';
+            } else if (table === 'mentions') {
+                if (sbCountries) sbCountries.textContent = data.stats && data.stats.unique_events ? data.stats.unique_events : '\u2014';
+                if (sbTone) sbTone.textContent = data.stats && data.stats.avg_doc_tone !== undefined ? data.stats.avg_doc_tone.toFixed(1) : '\u2014';
+            } else {
+                if (sbCountries) sbCountries.textContent = '\u2014';
+                if (sbTone) sbTone.textContent = '\u2014';
+            }
+        }
+
+        /* ════════════════════════════════════════
+           CUSTOM CALENDAR ENGINE
+        ════════════════════════════════════════ */
+        const CAL_MONTHS = ['January','February','March','April','May','June',
+                            'July','August','September','October','November','December'];
+        const CAL_MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun',
+                                  'Jul','Aug','Sep','Oct','Nov','Dec'];
+        const CAL_MIN_YEAR = 1979;
+        const CAL_MAX_YEAR = new Date().getFullYear();
+
+        // State
+        let calViewYear  = 2026;
+        let calViewMonth = 1;   // 0-based; 1 = February
+        let calSelYear   = 2026;
+        let calSelMonth  = 1;
+        let calSelDay    = 1;
+
+        function calInit() {
+            // Populate year select
+            const ySel = document.getElementById('calYearSel');
+            for (let y = CAL_MAX_YEAR; y >= CAL_MIN_YEAR; y--) {
+                const o = document.createElement('option');
+                o.value = y;
+                o.textContent = y;
+                ySel.appendChild(o);
+            }
+            // Populate month select
+            const mSel = document.getElementById('calMonthSel');
+            CAL_MONTHS.forEach((m, i) => {
+                const o = document.createElement('option');
+                o.value = i;
+                o.textContent = m;
+                mSel.appendChild(o);
+            });
+            calRender();
+            // Move popup to <body> to fully escape any backdrop-filter stacking context
+            document.body.appendChild(document.getElementById('calPopup'));
+            // Close popup on outside click
+            document.addEventListener('click', function(e) {
+                const trigger = document.getElementById('calTrigger');
+                const popup   = document.getElementById('calPopup');
+                if (trigger && !trigger.contains(e.target) && popup && !popup.contains(e.target)) calClose();
+            });
+        }
+
+        function toggleCalendar() {
+            const popup   = document.getElementById('calPopup');
+            const trigger = document.getElementById('calTrigger');
+            const isOpen  = popup.classList.contains('open');
+            if (isOpen) { calClose(); } else {
+                // Position popup below trigger using fixed coords (escapes backdrop-filter context)
+                const rect = trigger.getBoundingClientRect();
+                popup.style.top  = (rect.bottom + 6) + 'px';
+                popup.style.left = rect.left + 'px';
+                // Prevent going off right edge
+                const rightEdge = rect.left + 300;
+                if (rightEdge > window.innerWidth - 12) {
+                    popup.style.left = Math.max(8, window.innerWidth - 312) + 'px';
+                }
+                popup.classList.add('open');
+                trigger.classList.add('open');
+            }
+        }
+
+        function calClose() {
+            document.getElementById('calPopup').classList.remove('open');
+            document.getElementById('calTrigger').classList.remove('open');
+        }
+
+        function calRender() {
+            // Sync selects
+            document.getElementById('calYearSel').value  = calViewYear;
+            document.getElementById('calMonthSel').value = calViewMonth;
+
+            const today = new Date();
+            const firstDay  = new Date(calViewYear, calViewMonth, 1).getDay(); // 0=Sun
+            const daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
+            const daysInPrev  = new Date(calViewYear, calViewMonth, 0).getDate();
+
+            let html = '';
+            // Leading blanks (days from previous month)
+            for (let i = 0; i < firstDay; i++) {
+                const d = daysInPrev - firstDay + 1 + i;
+                html += `<div class="cal-day other-month disabled">${d}</div>`;
+            }
+            // Days of current month
+            for (let d = 1; d <= daysInMonth; d++) {
+                const isToday    = (d === today.getDate() && calViewMonth === today.getMonth() && calViewYear === today.getFullYear());
+                const isSelected = (d === calSelDay && calViewMonth === calSelMonth && calViewYear === calSelYear);
+                const isFuture   = new Date(calViewYear, calViewMonth, d) > today;
+                let cls = 'cal-day';
+                if (isToday)    cls += ' today';
+                if (isSelected) cls += ' selected';
+                if (isFuture)   cls += ' disabled';
+                html += `<div class="${cls}" onclick="calPickDay(${d});event.stopPropagation()">${d}</div>`;
+            }
+            // Trailing blanks
+            const total = firstDay + daysInMonth;
+            const trailing = total % 7 === 0 ? 0 : 7 - (total % 7);
+            for (let i = 1; i <= trailing; i++) {
+                html += `<div class="cal-day other-month disabled">${i}</div>`;
+            }
+            document.getElementById('calDays').innerHTML = html;
+        }
+
+        function calPickDay(day) {
+            calSelYear  = calViewYear;
+            calSelMonth = calViewMonth;
+            calSelDay   = day;
+            const iso   = `${calSelYear}-${String(calSelMonth+1).padStart(2,'0')}-${String(calSelDay).padStart(2,'0')}`;
+            document.getElementById('calendarPicker').value = iso;
+            document.getElementById('calTriggerText').textContent =
+                `${CAL_MONTHS_SHORT[calSelMonth]} ${calSelDay}, ${calSelYear}`;
+            calRender();
+            calClose();
+        }
+
+        function calShift(delta, unit) {
+            if (unit === 'month') {
+                calViewMonth += delta;
+                if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+                if (calViewMonth < 0)  { calViewMonth = 11; calViewYear--; }
+            } else {
+                calViewYear = Math.max(CAL_MIN_YEAR, Math.min(CAL_MAX_YEAR, calViewYear + delta));
+            }
+            calRender();
+        }
+
+        function calSetMonthYear() {
+            calViewMonth = parseInt(document.getElementById('calMonthSel').value);
+            calViewYear  = parseInt(document.getElementById('calYearSel').value);
+            calRender();
+        }
+
+        function calJumpTo(year, month, day) {
+            calViewYear  = year;
+            calViewMonth = month;
+            calSelYear   = year;
+            calSelMonth  = month;
+            calSelDay    = day;
+            const iso    = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            document.getElementById('calendarPicker').value = iso;
+            document.getElementById('calTriggerText').textContent =
+                `${CAL_MONTHS_SHORT[month]} ${day}, ${year}`;
+            calRender();
+            calClose();
+        }
+
+        // Boot
+        calInit();
+
+        /* ════════════════════════════════════════════════════════
+           SAVED INTELLIGENCE LIBRARY — Full JS Engine
+        ════════════════════════════════════════════════════════ */
+        const SIL_KEY = 'newsOrbit_intelligence_v1';
+        let silActiveFolder = '';
+        let silSelectedId   = null;
+        let silPendingEvent = null; // holds {event, country, domain} while save modal open
+
+        // ── Persistence helpers ──
+        function silLoad() {
+            try { return JSON.parse(localStorage.getItem(SIL_KEY) || '[]'); }
+            catch(e) { return []; }
+        }
+        function silSave(items) { localStorage.setItem(SIL_KEY, JSON.stringify(items)); }
+
+        // ── Auto-domain detection ──
+        const SIL_DOMAIN_KEYWORDS = {
+            'Politics':    ['election','parliament','president','prime minister','government','vote','party','senate','congress','minister','constitution','law','policy','democrat','republican'],
+            'Military':    ['army','troops','soldier','war','missile','bomb','attack','defense','military','weapon','drone','airstrike','navy','air force'],
+            'Security':    ['police','crime','terrorism','terror','arrest','security','threat','hostage','kidnap','violence','protest'],
+            'Economy':     ['gdp','economy','trade','tariff','export','import','recession','inflation','unemployment','growth','market','supply chain'],
+            'Finance':     ['bank','stock','bond','investment','fund','forex','currency','loan','debt','repo','interest rate','wall street','nasdaq','sensex','nifty'],
+            'Health':      ['hospital','disease','pandemic','vaccine','virus','health','outbreak','patient','doctor','medical','covid','ebola','flu'],
+            'Technology':  ['ai','artificial intelligence','cyber','tech','software','robot','algorithm','data','cloud','semiconductor','chip','startup'],
+            'Environment': ['climate','flood','drought','wildfire','emission','carbon','pollution','earthquake','tsunami','renewable','sustainability'],
+            'Diplomacy':   ['treaty','agreement','summit','diplomat','ambassador','sanction','negotiation','ceasefire','bilateral','multilateral','un','nato','g20'],
+            'Energy':      ['oil','gas','nuclear','coal','solar','wind','power','pipeline','petroleum','opec','fuel','energy'],
+            'Education':   ['school','university','student','education','teacher','curriculum','scholarship','college','campus'],
+            'Science':     ['research','space','nasa','launch','experiment','discovery','physics','biology','genome','quantum'],
+            'Business':    ['company','corporation','merger','acquisition','ceo','revenue','profit','startup','ipo','shares'],
+            'Society':     ['immigration','refugee','human rights','protest','poverty','inequality','welfare','culture','religion']
+        };
+
+        function silDetectDomain(text) {
+            const t = (text || '').toLowerCase();
+            let best = 'Politics', bestScore = 0;
+            for (const [domain, kws] of Object.entries(SIL_DOMAIN_KEYWORDS)) {
+                const score = kws.filter(k => t.includes(k)).length;
+                if (score > bestScore) { bestScore = score; best = domain; }
+            }
+            return best;
+        }
+
+        // ── Open save modal (pre-fill from event) ──
+        function openSaveModal(event, country, domain) {
+            silPendingEvent = { event, country, domain };
+            const title = [event.actor1, event.actor2].filter(s => s && s !== 'Unknown' && s !== 'nan').join(' — ');
+            document.getElementById('silTitle').value   = title || '';
+            document.getElementById('silUrl').value     = event.source_url || '';
+            document.getElementById('silCountry').value = getCountryName(country) || '';
+            // auto-detect domain from title + event code
+            const autoD = silDetectDomain(title + ' ' + (event.event_code || '') + ' ' + domain);
+            document.getElementById('silDomain').value  = autoD;
+            document.getElementById('silTags').value    = '';
+            // Show current date in date saved field
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-US', {weekday:'short', year:'numeric', month:'short', day:'numeric'});
+            document.getElementById('silSavedDate').value = dateStr;
+            document.getElementById('silSaveOverlay').classList.add('active');
+        }
+
+        function closeSaveModal() {
+            document.getElementById('silSaveOverlay').classList.remove('active');
+            silPendingEvent = null;
+        }
+
+        function confirmSave() {
+            const items = silLoad();
+            const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+            const tags = document.getElementById('silTags').value
+                .split(',')
+                .map(t => t.trim())
+                .filter(Boolean);
+            const item = {
+                id,
+                title: document.getElementById('silTitle').value.trim() || 'Untitled',
+                url: document.getElementById('silUrl').value.trim(),
+                country: document.getElementById('silCountry').value.trim(),
+                domain: document.getElementById('silDomain').value,
+                tags,
+                notes: '',
+                saved_date: new Date().toISOString(),
+                source_event_code: silPendingEvent?.event?.event_code || ''
+            };
+            items.unshift(item);
+            silSave(items);
+            closeSaveModal();
+            updateLibBadge();
+            // Toast
+            showSilToast('⭐ Saved to ' + item.domain + ' folder');
+        }
+
+        function showSilToast(msg) {
+            let t = document.getElementById('silToast');
+            if (!t) {
+                t = document.createElement('div');
+                t.id = 'silToast';
+                t.style.cssText = 'position:fixed;bottom:32px;right:32px;z-index:99999;background:linear-gradient(135deg,#1E8F60,#2ABF82);color:#060C18;padding:12px 22px;border-radius:12px;font-weight:700;font-size:0.9em;box-shadow:0 8px 24px rgba(42,191,130,0.4);transition:opacity 0.4s ease;pointer-events:none;';
+                document.body.appendChild(t);
+            }
+            t.textContent = msg;
+            t.style.opacity = '1';
+            clearTimeout(t._to);
+            t._to = setTimeout(() => { t.style.opacity = '0'; }, 2800);
+        }
+
+        function updateLibBadge() {
+            const count = silLoad().length;
+            const badge = document.getElementById('sbLibCount');
+            if (badge) { badge.textContent = count; badge.style.display = count ? 'inline-flex' : 'none'; }
+        }
+
+        // ── Library workspace ──
+        function openLibrary() {
+            // Always reset to "All Saved" folder on open
+            document.querySelectorAll('.sil-folder').forEach(f => f.classList.remove('active'));
+            const allFolder = document.querySelector('.sil-folder[data-domain=""]');
+            if (allFolder) allFolder.classList.add('active');
+            silActiveFolder = '';
+            silSelectedId = null;
+            document.getElementById('silWorkspace').style.display = 'block';
+            renderLibrary();
+            renderFolderCounts();
+        }
+        function closeLibrary() {
+            document.getElementById('silWorkspace').style.display = 'none';
+        }
+        function closeLibraryNav() {
+            closeLibrary();
+            // Return highlight to Dashboard
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
+            document.getElementById('navDashboard').classList.add('nav-active');
+        }
+
+        function silSetFolder(el) {
+            document.querySelectorAll('.sil-folder').forEach(f => f.classList.remove('active'));
+            el.classList.add('active');
+            silActiveFolder = el.dataset.domain;
+            renderLibrary();
+        }
+
+        function renderFolderCounts() {
+            const items = silLoad();
+            document.getElementById('silFolderAll').textContent = items.length;
+            ['Politics','Economy','Finance','Health','Education','Technology','Security','Diplomacy',
+             'Environment','Society','Science','Business','Military','Energy'].forEach(d => {
+                const el = document.getElementById('silFolder' + d);
+                if (el) el.textContent = items.filter(i => i.domain === d).length;
+            });
+        }
+
+        function renderLibrary() {
+            renderFolderCounts();
+            let items = silLoad();
+            const search  = (document.getElementById('silSearch')?.value || '').toLowerCase();
+            const fdomain = document.getElementById('silFilterDomain')?.value || '';
+            const fcountry= document.getElementById('silFilterCountry')?.value || '';
+            const sort    = document.getElementById('silFilterSort')?.value || 'newest';
+
+            // Update country filter dropdown
+            const countries = [...new Set(items.map(i => i.country).filter(Boolean))].sort();
+            const cSel = document.getElementById('silFilterCountry');
+            const curC = cSel.value;
+            cSel.innerHTML = '<option value="">All Countries</option>' +
+                countries.map(c => `<option${c===curC?' selected':''}>${c}</option>`).join('');
+
+            // Apply folder
+            if (silActiveFolder) items = items.filter(i => i.domain === silActiveFolder);
+            if (fdomain)  items = items.filter(i => i.domain === fdomain);
+            if (fcountry) items = items.filter(i => i.country === fcountry);
+            if (search)   items = items.filter(i =>
+                (i.title+i.country+i.domain+(i.tags||[]).join(' ')+(i.notes||'')).toLowerCase().includes(search)
+            );
+
+            if (sort === 'oldest') items.sort((a,b) => a.saved_date.localeCompare(b.saved_date));
+            else if (sort === 'domain') items.sort((a,b) => a.domain.localeCompare(b.domain));
+            else if (sort === 'country') items.sort((a,b) => (a.country||'').localeCompare(b.country||''));
+            else items.sort((a,b) => b.saved_date.localeCompare(a.saved_date));
+
+            const DOMAIN_ICONS = {Politics:'🏙️',Economy:'💹',Security:'🛡️',Finance:'🏦',Health:'🏥',Technology:'🧠',Diplomacy:'🤝',Environment:'🌱',Military:'⚔️',Science:'🔬',Education:'🎓',Business:'💼',Energy:'⚡',Society:'👥'};
+
+            const container = document.getElementById('silCardList');
+            if (!items.length) {
+                const folderName = silActiveFolder || 'library';
+                const isGlobal = !silActiveFolder;
+                container.innerHTML = `<div class="sil-empty" style="padding:80px 30px;">
+                    <div style="font-size:2.5em;margin-bottom:16px;">📭</div>
+                    <div style="font-size:1em;font-weight:700;color:var(--text-secondary);margin-bottom:10px;">${isGlobal ? 'No saved news yet' : 'Nothing in ' + folderName}</div>
+                    <div style="font-size:0.82em;color:var(--text-muted);line-height:1.8;">
+                        To save news:<br>
+                        1. Go to <b style="color:#2ABF82">Events</b> in the sidebar<br>
+                        2. Click any event row to open details<br>
+                        3. Click <b style="color:#2ABF82">⭐ Save to Intelligence Library</b>
+                    </div>
+                </div>`;
+                return;
+            }
+            container.innerHTML = items.map(item => {
+                const icon = DOMAIN_ICONS[item.domain] || '📄';
+                const dateStr = item.saved_date ? new Date(item.saved_date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+                const tagsHtml = (item.tags||[]).map(t => `<span class="sil-tag">${t}</span>`).join('');
+                const isActive = item.id === silSelectedId ? ' sil-card-active' : '';
+                return `
+                <div class="sil-card${isActive}" onclick="silSelectItem('${item.id}')" data-id="${item.id}">
+                    <div class="sil-card-top">
+                        <span class="sil-card-domain">${icon} ${item.domain}</span>
+                        <span class="sil-card-date">${dateStr}</span>
+                    </div>
+                    <div class="sil-card-title">${item.title}</div>
+                    <div class="sil-card-country">🌍 ${item.country || '—'}</div>
+                    <div class="sil-card-tags">${tagsHtml}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function silSelectItem(id) {
+            silSelectedId = id;
+            // update active state
+            document.querySelectorAll('.sil-card').forEach(c => c.classList.toggle('sil-card-active', c.dataset.id === id));
+            const items = silLoad();
+            const item = items.find(i => i.id === id);
+            if (!item) return;
+            const DOMAIN_ICONS = {Politics:'🏙️',Economy:'💹',Security:'🛡️',Finance:'🏦',Health:'🏥',Technology:'🧠',Diplomacy:'🤝',Environment:'🌱',Military:'⚔️',Science:'🔬',Education:'🎓',Business:'💼',Energy:'⚡',Society:'👥'};
+            const icon = DOMAIN_ICONS[item.domain] || '📄';
+            const dateStr = item.saved_date ? new Date(item.saved_date).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+            const tagsHtml = (item.tags||[]).map(t => `<span class="sil-tag" style="cursor:pointer" onclick="silRemoveTag('${id}','${t}')" title="Remove tag">${t} ×</span>`).join('');
+            document.getElementById('silDetail').innerHTML = `
+                <div class="sil-detail-view">
+                    <div class="sil-detail-domain">${icon} ${item.domain}</div>
+                    <div class="sil-detail-title">${item.title}</div>
+                    <div class="sil-detail-meta">🌍 ${item.country || '—'} &nbsp;·&nbsp; 📅 ${dateStr}</div>
+                    ${item.source_event_code ? `<div class="sil-detail-meta" style="margin-top:4px;">Event Code: <code>${item.source_event_code}</code></div>` : ''}
+                    <div class="sil-detail-tags">${tagsHtml} <input class="sil-tag-input" id="silNewTagInput" placeholder="+ Add tag" onkeydown="if(event.key==='Enter')silAddTag('${id}')"></div>
+                    ${item.url ? `<a class="sil-detail-url" href="${item.url}" target="_blank">🔗 ${item.url}</a>` : ''}
+                    <div class="sil-detail-section">Analyst Notes</div>
+                    <textarea class="sil-notes-edit" id="silNotesEdit" onblur="silSaveNotes('${id}')">${item.notes || ''}</textarea>
+                    <div class="sil-detail-actions">
+                        ${item.url ? `<a class="sil-action-btn sil-btn-open" href="${item.url}" target="_blank">🔗 Open Source</a>` : ''}
+                        <button class="sil-action-btn sil-btn-delete" onclick="silDeleteItem('${id}')">🗑️ Delete</button>
+                    </div>
+                </div>`;
+        }
+
+        function silDeleteItem(id) {
+            if (!confirm('Delete this saved article?')) return;
+            let items = silLoad().filter(i => i.id !== id);
+            silSave(items);
+            if (silSelectedId === id) {
+                silSelectedId = null;
+                document.getElementById('silDetail').innerHTML = '<div class="sil-detail-placeholder">📌<br><span>Select an article<br>to view details</span></div>';
+            }
+            renderLibrary();
+            updateLibBadge();
+        }
+
+        function silSaveNotes(id) {
+            const items = silLoad();
+            const item = items.find(i => i.id === id);
+            if (!item) return;
+            item.notes = document.getElementById('silNotesEdit')?.value || '';
+            silSave(items);
+        }
+
+        function silAddTag(id) {
+            const inp = document.getElementById('silNewTagInput');
+            const tag = (inp?.value || '').trim();
+            if (!tag) return;
+            const items = silLoad();
+            const item = items.find(i => i.id === id);
+            if (!item) return;
+            if (!item.tags) item.tags = [];
+            if (!item.tags.includes(tag)) { item.tags.push(tag); silSave(items); }
+            silSelectItem(id); renderLibrary();
+        }
+
+        function silRemoveTag(id, tag) {
+            const items = silLoad();
+            const item = items.find(i => i.id === id);
+            if (!item) return;
+            item.tags = (item.tags || []).filter(t => t !== tag);
+            silSave(items);
+            silSelectItem(id); renderLibrary();
+        }
+
+        // Boot library badge on page load
+        document.addEventListener('DOMContentLoaded', updateLibBadge);
+
+        /* ═══════════════════════════════════════
+           SIDEBAR AI ASSISTANT — JS
+        ═══════════════════════════════════════ */
+        function toggleAiPanel() {
+            const drawer = document.getElementById('aiDrawer');
+            if (drawer.classList.contains('ai-open')) {
+                closeAiPanel();
+            } else {
+                openAiPanel();
+            }
+        }
+        function openAiPanel() {
+            const drawer = document.getElementById('aiDrawer');
+            drawer.style.display = 'flex';
+            drawer.classList.add('ai-open');
+            // Sync sidebar highlight
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
+            document.getElementById('navAI').classList.add('nav-active');
+        }
+        function closeAiPanel() {
+            const drawer = document.getElementById('aiDrawer');
+            drawer.style.display = 'none';
+            drawer.classList.remove('ai-open');
+            // Return highlight to Dashboard
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
+            document.getElementById('navDashboard').classList.add('nav-active');
+        }
+        function aiHideSuggestions() {
+            const s = document.getElementById('aiSuggestions');
+            if (s) s.style.display = 'none';
+        }
+        function aiGetContext() {
+            const data = window.currentData;
+            const saved = (typeof silLoad === 'function') ? silLoad() : [];
+            const date = document.getElementById('calTriggerText')?.textContent || '';
+            const ctx = {
+                query_date: date,
+                total_records: data?.total_records || 0,
+                top_countries: data?.stats?.top_countries || {},
+                goldstein_avg: data?.stats?.goldstein_avg,
+                most_common_event: data?.stats?.most_common_event,
+                saved_count: saved.length,
+                saved_domains: saved.reduce((acc, s) => { acc[s.domain] = (acc[s.domain]||0)+1; return acc; }, {})
+            };
+            return JSON.stringify(ctx, null, 2);
+        }
+        function aiSend() {
+            const inp = document.getElementById('aiInput');
+            const q = (inp.value || '').trim();
+            if (!q) return;
+            inp.value = ''; inp.style.height = 'auto';
+            aiHideSuggestions();
+            aiAppendMsg(q, 'user');
+            aiCallGemini(q);
+        }
+        function aiAsk(q) {
+            aiHideSuggestions();
+            aiAppendMsg(q, 'user');
+            aiCallGemini(q);
+        }
+        function aiMarkdownToHtml(raw) {
+            return raw
+                .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g,'<em>$1</em>')
+                .replace(/^### (.+)$/gm,'<strong style="color:#2ABF82;font-size:1.05em">$1</strong>')
+                .replace(/^## (.+)$/gm,'<strong style="color:#2ABF82;font-size:1.1em">$1</strong>')
+                .replace(/^# (.+)$/gm,'<strong style="color:#2ABF82;font-size:1.15em">$1</strong>')
+                .replace(/^[\-\*] (.+)$/gm,'&bull; $1')
+                .replace(/\n/g,'<br>');
+        }
+        let aiLastQuestion = '';
+        async function aiCallGemini(q) {
+            aiLastQuestion = q;
+            aiShowTyping();
+            const lang = document.getElementById('aiLangSel')?.value || 'en';
+            const context = aiGetContext();
+            try {
+                const res = await fetch('/api/ai-chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ message: q, context, language: lang })
+                });
+                const json = await res.json();
+                aiClearTyping();
+                if (json.reply) {
+                    aiAppendMsg(aiMarkdownToHtml(json.reply), 'bot');
+                } else {
+                    aiAppendMsg('⚠️ Unable to get a response. Please try again.', 'bot');
+                }
+            } catch(e) {
+                aiClearTyping();
+                aiAppendMsg('⚠️ Network error. Please check your connection and try again.', 'bot');
+            }
+        }
+        function aiAppendMsg(html, role) {
+            const box = document.getElementById('aiMessages');
+            const div = document.createElement('div');
+            div.className = 'ai-msg ai-msg-' + (role === 'user' ? 'user' : 'bot');
+            div.innerHTML = html;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+        function aiShowTyping() {
+            const box = document.getElementById('aiMessages');
+            const d = document.createElement('div');
+            d.id = 'aiTypingIndicator';
+            d.className = 'ai-msg ai-msg-bot ai-typing';
+            d.innerHTML = '<span></span><span></span><span></span>';
+            box.appendChild(d);
+            box.scrollTop = box.scrollHeight;
+        }
+        function aiClearTyping() {
+            const d = document.getElementById('aiTypingIndicator');
+            if (d) d.remove();
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const inp = document.getElementById('aiInput');
+            if (inp) inp.addEventListener('input', () => {
+                inp.style.height = 'auto';
+                inp.style.height = Math.min(inp.scrollHeight, 72) + 'px';
+            });
+            // Click anywhere on the collapsed sidebar to expand it
+            document.getElementById('globalSidebar').addEventListener('click', function() {
+                if (this.classList.contains('sb-collapsed')) toggleSidebar();
+            });
+        });
+
+        function toggleSidebar() {
+            const sb = document.getElementById('globalSidebar');
+            const isNowCollapsed = sb.classList.toggle('sb-collapsed');
+            const newLeft = isNowCollapsed ? '64px' : '264px';
+            // Adjust any fixed-position overlays
+            ['silWorkspace', 'aiDrawer'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.style.display !== 'none') el.style.left = newLeft;
+            });
+        }
+
+        // Load default data on page load
+        window.onload = async function() {
+            console.log('Page loaded, checking server...');
+            const isHealthy = await checkServerHealth();
+            if (isHealthy) {
+                setTimeout(() => {
+                    console.log('Loading default data...');
+                    queryData();
+                }, 1000);
+            }
+        };
+    </script>
+</body>
+</html>
