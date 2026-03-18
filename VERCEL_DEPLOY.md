@@ -3,7 +3,7 @@
 ## 1) Import project
 - In Vercel, click **Add New... > Project**.
 - Select GitHub repo: `satyamraj2990/NewsOrbit`.
-- Set **Root Directory** to `gdeltPyR-master`.
+- Root directory should be repository root (this repo is already rooted at `gdeltPyR-master` contents).
 
 ## 2) Build/runtime settings
 - Framework preset: **Other**.

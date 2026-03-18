@@ -5,12 +5,27 @@ Global Intelligence Platform for real-time events monitoring
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from flask_cors import CORS
 from functools import wraps
-import gdelt
-import pandas as pd
 from datetime import datetime, timedelta
 import json
 import sys
 import os
+
+# Keep app startup resilient on serverless platforms: if heavy data deps fail,
+# the API responds with clear errors instead of crashing at import time.
+_gdelt_import_error = None
+_pd_import_error = None
+
+try:
+    import gdelt
+except Exception as ex:
+    gdelt = None
+    _gdelt_import_error = str(ex)
+
+try:
+    import pandas as pd
+except Exception as ex:
+    pd = None
+    _pd_import_error = str(ex)
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'change-me-in-production')
@@ -35,6 +50,12 @@ gd2 = None
 def get_gdelt(version=2):
     """Lazy load GDELT instances"""
     global gd1, gd2
+
+    if gdelt is None:
+        raise RuntimeError(f"GDELT dependency import failed: {_gdelt_import_error}")
+    if pd is None:
+        raise RuntimeError(f"Pandas import failed: {_pd_import_error}")
+
     if version == 1:
         if gd1 is None:
             gd1 = gdelt.gdelt(version=1)
@@ -67,6 +88,18 @@ def logout():
     """Logout and clear session"""
     session.clear()
     return redirect(url_for('login'))
+
+@app.route('/api/health')
+def health():
+    """Basic runtime diagnostics for deployment checks."""
+    status = 'ok'
+    checks = {
+        'gdelt_import': 'ok' if gdelt is not None else f'error: {_gdelt_import_error}',
+        'pandas_import': 'ok' if pd is not None else f'error: {_pd_import_error}',
+    }
+    if gdelt is None or pd is None:
+        status = 'degraded'
+    return jsonify({'status': status, 'checks': checks})
 
 @app.route('/')
 @login_required
